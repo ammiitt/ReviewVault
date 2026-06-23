@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ReviewVault.Api/ReviewVault.Api.csproj" />
+  <Project Path="ReviewVault.Application/ReviewVault.Application.csproj" />
+  <Project Path="ReviewVault.Domain/ReviewVault.Domain.csproj" />
+  <Project Path="ReviewVault.Infrastructure/ReviewVault.Infrastructure.csproj" />
+</Solution>
