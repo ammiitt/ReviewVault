@@ -1,0 +1,20 @@
+:host {
+    display: block;
+}
+
+.bg-orange {
+    background-color: #fd7e14;
+}
+
+.table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--bs-secondary-color);
+    font-weight: 600;
+    border-bottom-width: 2px;
+}
+
+.table td {
+    font-size: 0.9rem;
+}

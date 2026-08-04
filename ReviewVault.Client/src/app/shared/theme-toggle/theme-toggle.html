@@ -1,1 +1,6 @@
-<p>theme-toggle works!</p>
+<button
+    class="btn btn-link nav-link p-1"
+    (click)="toggleTheme()"
+    [title]="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+    <i class="bi" [ngClass]="isDark ? 'bi-sun-fill text-warning' : 'bi-moon-fill'"></i>
+</button>

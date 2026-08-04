@@ -1,1 +1,107 @@
-<p>post-detail works!</p>
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<!-- Error -->
+<div *ngIf="error" class="alert alert-danger text-center">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+    <br>
+    <a routerLink="/" class="btn btn-outline-primary btn-sm mt-3">
+        <i class="bi bi-arrow-left me-1"></i>Back to Home
+    </a>
+</div>
+
+<!-- Post Content -->
+<article *ngIf="!loading && post" class="post-detail">
+
+    <!-- Back button -->
+    <a routerLink="/" class="btn btn-outline-secondary btn-sm mb-4">
+        <i class="bi bi-arrow-left me-1"></i>Back to Posts
+    </a>
+
+    <!-- Cover Image -->
+    <div class="cover-wrapper mb-4" *ngIf="post.coverImageUrl">
+        <img [src]="post.coverImageUrl" [alt]="post.title" class="cover-image">
+
+        <!-- Media type badge on image -->
+        <span class="badge bg-dark bg-opacity-75 media-badge-detail">
+            <i class="bi bi-collection-play me-1"></i>{{ post.mediaTypeName }}
+        </span>
+    </div>
+
+    <!-- Categories -->
+    <div class="mb-3">
+        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-2"
+              *ngFor="let cat of post.categories"
+              style="font-size: 0.85rem; cursor: pointer"
+              (click)="goToCategory(cat)">
+            {{ cat }}
+        </span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="display-6 fw-bold mb-3">{{ post.title }}</h1>
+
+    <!-- Meta info -->
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-4 text-body-secondary">
+        <!-- Author -->
+        <span>
+            <i class="bi bi-person-circle me-1"></i>{{ post.authorName }}
+        </span>
+
+        <!-- Date -->
+        <span>
+            <i class="bi bi-calendar3 me-1"></i>{{ post.publishedAt | date:'longDate' }}
+        </span>
+
+        <!-- Rating -->
+        <span class="badge" [ngClass]="getRatingClass()">
+            <i class="bi bi-star-fill me-1"></i>{{ post.ratingName }}
+        </span>
+
+        <!-- Reading time estimate -->
+        <span>
+            <i class="bi bi-clock me-1"></i>{{ getReadingTime() }} min read
+        </span>
+    </div>
+
+    <!-- Divider -->
+    <hr class="mb-4">
+
+    <!-- Article Body -->
+    <div class="article-body fs-5 lh-lg mb-5">
+        {{ post.body }}
+    </div>
+
+    <!-- Bottom section -->
+    <div class="border-top pt-4 mt-5">
+        <div class="row align-items-center">
+            <!-- Author info -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="author-avatar">
+                        <i class="bi bi-person-circle display-6 text-primary"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ post.authorName }}</h6>
+                        <small class="text-body-secondary">Movie & Anime Enthusiast</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share / Back -->
+            <div class="col-md-6 text-md-end">
+                <button class="btn btn-outline-primary btn-sm me-2" (click)="sharePost()">
+                    <i class="bi bi-share me-1"></i>Share
+                </button>
+                <a routerLink="/" class="btn btn-primary btn-sm">
+                    <i class="bi bi-grid me-1"></i>More Posts
+                </a>
+            </div>
+        </div>
+    </div>
+
+</article>

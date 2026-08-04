@@ -1,1 +1,49 @@
-<p>post-card works!</p>
+<div class="card h-100 border-0 shadow-sm post-card" (click)="goToPost()">
+
+    <!-- Cover Image -->
+    <div class="card-img-wrapper">
+        <img
+            [src]="post.coverImageUrl || 'https://placehold.co/400x250/6c5ce7/white?text=ReviewVault'"
+            [alt]="post.title"
+            class="card-img-top">
+
+        <!-- Rating badge on image -->
+        <span class="badge rating-badge" [ngClass]="getRatingClass()">
+            <i class="bi bi-star-fill me-1"></i>{{ post.ratingName }}
+        </span>
+
+        <!-- Media type badge -->
+        <span class="badge bg-dark bg-opacity-75 media-badge">
+            {{ post.mediaTypeName }}
+        </span>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body d-flex flex-column">
+        <!-- Categories -->
+        <div class="mb-2">
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-1"
+                  *ngFor="let cat of post.categories">
+                {{ cat }}
+            </span>
+        </div>
+
+        <!-- Title -->
+        <h5 class="card-title fw-bold mb-2">{{ post.title }}</h5>
+
+        <!-- Summary -->
+        <p class="card-text text-body-secondary small flex-grow-1">
+            {{ post.summary || (post.body | slice:0:120) }}...
+        </p>
+
+        <!-- Footer: Author + Date -->
+        <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+            <small class="text-body-secondary">
+                <i class="bi bi-person me-1"></i>{{ post.authorName }}
+            </small>
+            <small class="text-body-secondary">
+                <i class="bi bi-calendar me-1"></i>{{ post.publishedAt | date:'mediumDate' }}
+            </small>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,152 @@
-<p>create-post works!</p>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">
+                <i class="bi bi-pencil-square me-2"></i>New Post
+            </h2>
+            <a routerLink="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="error" class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+        </div>
+
+        <!-- Success -->
+        <div *ngIf="success" class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>Post created successfully!
+            <a [routerLink]="['/post', createdSlug]" class="alert-link ms-2">View Post →</a>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+            <!-- Title -->
+            <div class="mb-3">
+                <label for="title" class="form-label fw-bold">Title</label>
+                <input type="text" id="title" class="form-control form-control-lg"
+                       formControlName="title"
+                       placeholder="Why Attack on Titan is Peak Fiction"
+                       [ngClass]="{'is-invalid': submitted && f['title'].errors}">
+                <div class="invalid-feedback" *ngIf="submitted && f['title'].errors">
+                    <span *ngIf="f['title'].errors['required']">Title is required</span>
+                    <span *ngIf="f['title'].errors['maxlength']">Max 200 characters</span>
+                </div>
+            </div>
+
+            <!-- Media Type + Rating row -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="mediaType" class="form-label fw-bold">Media Type</label>
+                    <select id="mediaType" class="form-select" formControlName="mediaTypeId"
+                            [ngClass]="{'is-invalid': submitted && f['mediaTypeId'].errors}">
+                        <option value="0" disabled>Select type...</option>
+                        <option *ngFor="let mt of mediaTypes" [value]="mt.id">{{ mt.name }}</option>
+                    </select>
+                    <div class="invalid-feedback">Select a media type</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="rating" class="form-label fw-bold">Rating</label>
+                    <select id="rating" class="form-select" formControlName="rating"
+                            [ngClass]="{'is-invalid': submitted && f['rating'].errors}">
+                        <option value="0" disabled>Select rating...</option>
+                        <option value="5">⭐⭐⭐⭐⭐ Masterpiece</option>
+                        <option value="4">⭐⭐⭐⭐ Good</option>
+                        <option value="3">⭐⭐⭐ Average</option>
+                        <option value="2">⭐⭐ Bad</option>
+                        <option value="1">⭐ Terrible</option>
+                    </select>
+                    <div class="invalid-feedback">Select a rating</div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Categories</label>
+                <div class="d-flex flex-wrap gap-2">
+                    <div *ngFor="let cat of categories" class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               [id]="'cat-' + cat.id"
+                               [value]="cat.id"
+                               (change)="onCategoryChange($event, cat.id)">
+                        <label class="form-check-label" [for]="'cat-' + cat.id">
+                            {{ cat.name }}
+                        </label>
+                    </div>
+                </div>
+                <small class="text-danger" *ngIf="submitted && selectedCategoryIds.length === 0">
+                    Select at least one category
+                </small>
+            </div>
+
+            <!-- Cover Image URL -->
+            <div class="mb-3">
+                <label for="coverImage" class="form-label fw-bold">Cover Image URL</label>
+                <input type="url" id="coverImage" class="form-control"
+                       formControlName="coverImageUrl"
+                       placeholder="https://images.unsplash.com/photo-...">
+                <!-- Preview -->
+                <div *ngIf="postForm.get('coverImageUrl')?.value" class="mt-2">
+                    <img [src]="postForm.get('coverImageUrl')?.value"
+                         class="img-fluid rounded" style="max-height: 200px"
+                         (error)="onImageError($event)">
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="mb-3">
+                <label for="summary" class="form-label fw-bold">Summary</label>
+                <input type="text" id="summary" class="form-control"
+                       formControlName="summary"
+                       placeholder="Short preview text for the card...">
+                <small class="text-body-secondary">Shown on post cards. Max 500 characters.</small>
+            </div>
+
+            <!-- Body -->
+            <div class="mb-3">
+                <label for="body" class="form-label fw-bold">Body</label>
+                <textarea id="body" class="form-control" rows="12"
+                          formControlName="body"
+                          placeholder="Write your review here..."
+                          [ngClass]="{'is-invalid': submitted && f['body'].errors}">
+                </textarea>
+                <div class="invalid-feedback" *ngIf="submitted && f['body'].errors">
+                    <span *ngIf="f['body'].errors['required']">Body is required</span>
+                    <span *ngIf="f['body'].errors['minlength']">Write at least 50 characters</span>
+                </div>
+                <small class="text-body-secondary">
+                    {{ postForm.get('body')?.value?.length || 0 }} characters
+                </small>
+            </div>
+
+            <!-- Publish toggle -->
+            <div class="mb-4">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="isPublished"
+                           formControlName="isPublished">
+                    <label class="form-check-label fw-bold" for="isPublished">
+                        {{ postForm.get('isPublished')?.value ? '🟢 Publish now' : '📝 Save as draft' }}
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4" [disabled]="loading">
+                    <span *ngIf="!loading">
+                        <i class="bi bi-send me-2"></i>
+                        {{ postForm.get('isPublished')?.value ? 'Publish' : 'Save Draft' }}
+                    </span>
+                    <span *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+                    </span>
+                </button>
+                <a routerLink="/admin/dashboard" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
