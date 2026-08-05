@@ -1,0 +1,25 @@
+:host {
+    display: block;
+    padding-bottom: 3rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.15);
+}
+
+.btn-primary {
+    background: #6c5ce7;
+    border-color: #6c5ce7;
+}
+
+.btn-primary:hover {
+    background: #5a4bd1;
+    border-color: #5a4bd1;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 200px;
+}

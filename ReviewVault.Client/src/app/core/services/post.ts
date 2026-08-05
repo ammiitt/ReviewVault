@@ -38,6 +38,12 @@ export class PostService extends ApiBaseService {
     create(request: CreatePostRequest): Observable<PostResponse> {
         return this.post<PostResponse>('Post', request);
     }
+    
+    // Get single post by ID (for admin edit page)
+// Calls: GET /api/Post/id/5
+    getById(id: number): Observable<PostResponse>   {
+    return this.get<PostResponse>(`Post/id/${id}`);
+    }
 
     // Update existing post
     // Calls: PUT /api/Post/5

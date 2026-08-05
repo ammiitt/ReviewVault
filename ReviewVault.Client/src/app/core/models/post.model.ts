@@ -7,12 +7,14 @@ export interface PostResponse {
     coverImageUrl: string | null;
     rating: number;
     ratingName: string;
+    mediaTypeId: number;              // ← ADD
     mediaTypeName: string;
     authorName: string;
     isPublished: boolean;
     publishedAt: string | null;
     createdAt: string;
     categories: string[];
+    categoryIds: number[];            // ← ADD
 }
 
 export interface PostListResponse {
