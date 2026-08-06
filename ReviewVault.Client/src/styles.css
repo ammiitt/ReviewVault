@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Background image */
+body {
+    min-height: 100vh;
+}
+
+body[data-bs-theme="dark"] {
+    background-color: #0f1117;
+    background-image: url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1920');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Dark overlay so text is readable on the image */
+body[data-bs-theme="dark"]::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 17, 23, 0.92);
+    z-index: -1;
+}
+
+body[data-bs-theme="light"] {
+    background-color: #f8f9fa;
+}

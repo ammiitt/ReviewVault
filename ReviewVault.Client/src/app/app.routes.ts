@@ -43,6 +43,11 @@ export const routes: Routes = [
             .then(m => m.EditPost),
         canActivate: [authGuard]
     },
+    {
+    path: 'trending',
+    loadComponent: () => import('./pages/trending/trending')
+        .then(m => m.Trending)
+    },
 
     // Wildcard — any unknown URL goes to home
     { path: '**', redirectTo: '' }

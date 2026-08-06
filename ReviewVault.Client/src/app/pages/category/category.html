@@ -1,1 +1,51 @@
-<p>category works!</p>
+<!-- Header -->
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a routerLink="/" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+        <h2 class="fw-bold mb-0">
+            <i class="bi bi-tag me-2 text-primary"></i>{{ categoryName }}
+        </h2>
+        <small class="text-body-secondary">{{ posts.length }} post{{ posts.length !== 1 ? 's' : '' }} found</small>
+    </div>
+</div>
+
+<!-- All categories as filter pills -->
+<div class="mb-4">
+    <span class="me-2 text-body-secondary small fw-bold">Browse:</span>
+    <a *ngFor="let cat of allCategories"
+       [routerLink]="['/category', cat.name]"
+       class="badge rounded-pill text-decoration-none me-2 mb-1"
+       [ngClass]="cat.name === categoryName ? 'bg-primary' : 'bg-primary bg-opacity-10 text-primary'"
+       style="font-size: 0.85rem; cursor: pointer; padding: 0.4rem 0.8rem">
+        {{ cat.name }}
+    </a>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="text-body-secondary mt-2">Loading posts...</p>
+</div>
+
+<!-- Error -->
+<div *ngIf="error" class="alert alert-danger text-center">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+</div>
+
+<!-- No posts -->
+<div *ngIf="!loading && !error && posts.length === 0" class="text-center py-5">
+    <i class="bi bi-journal-x display-3 text-body-secondary"></i>
+    <p class="text-body-secondary mt-3">No posts in "{{ categoryName }}" yet.</p>
+    <a routerLink="/" class="btn btn-primary btn-sm mt-2">
+        <i class="bi bi-house me-1"></i>Back to Home
+    </a>
+</div>
+
+<!-- Posts Grid -->
+<div class="row g-4" *ngIf="!loading && posts.length > 0">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let post of posts">
+        <app-post-card [post]="post"></app-post-card>
+    </div>
+</div>

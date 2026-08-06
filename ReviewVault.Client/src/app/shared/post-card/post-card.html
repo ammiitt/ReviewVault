@@ -22,10 +22,12 @@
     <div class="card-body d-flex flex-column">
         <!-- Categories -->
         <div class="mb-2">
-            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-1"
-                  *ngFor="let cat of post.categories">
-                {{ cat }}
-            </span>
+            <a *ngFor="let cat of post.categories"
+   [routerLink]="['/category', cat]"
+   class="badge rounded-pill bg-primary bg-opacity-10 text-primary me-1 text-decoration-none"
+   (click)="$event.stopPropagation()">
+    {{ cat }}
+</a>
         </div>
 
         <!-- Title -->

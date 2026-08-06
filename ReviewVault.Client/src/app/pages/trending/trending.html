@@ -1,0 +1,48 @@
+<!-- Header -->
+<div class="text-center mb-5">
+    <h1 class="display-6 fw-bold">
+        <i class="bi bi-fire text-danger me-2"></i>Trending Posts
+    </h1>
+    <p class="text-body-secondary">The highest rated reviews on ReviewVault</p>
+</div>
+
+<!-- Filter by media type -->
+<div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+    <button class="btn btn-sm"
+            [ngClass]="selectedType === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+            (click)="filterByType('all')">
+        All
+    </button>
+    <button *ngFor="let mt of mediaTypes"
+            class="btn btn-sm"
+            [ngClass]="selectedType === mt.name ? 'btn-primary' : 'btn-outline-primary'"
+            (click)="filterByType(mt.name)">
+        {{ mt.name }}
+    </button>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+</div>
+
+<!-- Posts Grid -->
+<div class="row g-4" *ngIf="!loading">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let post of getFilteredPosts(); let i = index">
+        <div class="position-relative">
+            <!-- Rank badge -->
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1"
+                  style="font-size: 0.9rem; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center"
+                  *ngIf="i < 3">
+                {{ i + 1 }}
+            </span>
+            <app-post-card [post]="post"></app-post-card>
+        </div>
+    </div>
+</div>
+
+<!-- No posts -->
+<div *ngIf="!loading && getFilteredPosts().length === 0" class="text-center py-5">
+    <i class="bi bi-journal-x display-3 text-body-secondary"></i>
+    <p class="text-body-secondary mt-3">No posts found</p>
+</div>

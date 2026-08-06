@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PostResponse } from '../../core/models/post.model';
 
 @Component({
   selector: 'app-post-card',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './post-card.html',
   styleUrl: './post-card.css',
 })

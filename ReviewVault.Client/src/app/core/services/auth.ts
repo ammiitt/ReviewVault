@@ -19,16 +19,46 @@ export class AuthService extends ApiBaseService {
     private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
     currentUser$ = this.currentUserSubject.asObservable();
 
-    constructor(http: HttpClient) {
-        super(http); // give HttpClient to parent (ApiBaseService)
+   constructor(http: HttpClient) {
+    super(http);
+    this.checkStoredAuth();
+}
 
-        // On app start, check if user was previously logged in
-        const stored = localStorage.getItem('auth');
-        if (stored) {
-            this.currentUserSubject.next(JSON.parse(stored));
-        }
+private checkStoredAuth(): void {
+    const stored = localStorage.getItem('auth');
+    if (!stored) return;
+
+    const auth: AuthResponse = JSON.parse(stored);
+
+    // Check if refresh token is expired (7 days)
+    const refreshExpiry = new Date(auth.refreshTokenExpiresAt);
+    if (refreshExpiry <= new Date()) {
+        // Refresh token expired — full logout
+        localStorage.removeItem('auth');
+        this.currentUserSubject.next(null);
+        return;
     }
 
+    // Check if access token is expired (30 min)
+    const accessExpiry = new Date(auth.accessTokenExpiresAt);
+    if (accessExpiry <= new Date()) {
+        // Access token expired but refresh token valid — try refresh
+        this.refreshToken().subscribe({
+            next: (newAuth) => {
+                // New tokens saved automatically via tap() in refreshToken()
+            },
+            error: () => {
+                // Refresh failed — full logout
+                localStorage.removeItem('auth');
+                this.currentUserSubject.next(null);
+            }
+        });
+        return;
+    }
+
+    // Both tokens valid — restore session
+    this.currentUserSubject.next(auth);
+}
     
     register(request: RegisterRequest): Observable<AuthResponse> {
         return this.post<AuthResponse>('Auth/register', request)

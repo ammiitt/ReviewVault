@@ -1,6 +1,8 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
 
 // Functional interceptor (Angular 17+ way — no class needed)
@@ -8,23 +10,28 @@ import { AuthService } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-    // Get the auth service
     const authService = inject(AuthService);
+    const router = inject(Router);
 
-    // Get the JWT token
     const token = authService.getAccessToken();
 
-    // If we have a token, clone the request and add the Authorization header
-    if (token) {
-        const clonedRequest = req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        // Send the modified request (with token)
-        return next(clonedRequest);
-    }
+    // Clone request with token if available
+    const authReq = token
+        ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+        : req;
 
-    // No token? Send the original request (public endpoints like GET /posts)
-    return next(req);
+    return next(authReq).pipe(
+        catchError((error: HttpErrorResponse) => {
+            // If 401 and not on login/register page — auto logout
+            if (error.status === 401 &&
+                !req.url.includes('Auth/login') &&
+                !req.url.includes('Auth/register') &&
+                !req.url.includes('Auth/refresh')) {
+
+                authService.logout();
+                router.navigate(['/login']);
+            }
+            return throwError(() => error);
+        })
+    );
 };

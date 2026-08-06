@@ -45,11 +45,22 @@ export class PostService extends ApiBaseService {
     return this.get<PostResponse>(`Post/id/${id}`);
     }
 
+    getByCategory(categoryId: number, page: number = 1, pageSize: number = 10): Observable<PostResponse[]> {
+    const params = new HttpParams()
+        .set('page', page)
+        .set('pageSize', pageSize);
+    return this.get<PostResponse[]>(`Post/category/${categoryId}`, params);
+    }
+
+
+
     // Update existing post
     // Calls: PUT /api/Post/5
     update(id: number, request: UpdatePostRequest): Observable<PostResponse> {
         return this.put<PostResponse>(`Post/${id}`, request);
     }
+
+
 
     // Delete a post
     // Calls: DELETE /api/Post/5
