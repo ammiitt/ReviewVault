@@ -25,5 +25,6 @@ namespace ReviewVault.Infrastructure.Entities
         public UserEntity Author { get; set; } = null!;
         public MediaTypeEntity MediaType { get; set; } = null!;
         public ICollection<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
+
     }
 }

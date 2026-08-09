@@ -59,7 +59,8 @@ namespace ReviewVault.Infrastructure.Mappings
                 MediaTypeId = entity.MediaTypeId,
                 AuthorName = entity.Author?.Username ?? string.Empty,
                 MediaTypeName = entity.MediaType?.Name ?? string.Empty,
-                Categories = entity.Categories?.Select(c => c.Name).ToList() ?? new List<string>()
+                Categories = entity.Categories?.Select(c => c.Name).ToList() ?? new List<string>(),
+                CategoryIds = entity.Categories?.Select(c => c.Id).ToList() ?? new List<int>(),
             };
         }
 

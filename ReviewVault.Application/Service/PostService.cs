@@ -35,6 +35,12 @@ namespace ReviewVault.Application.Service
             return _mapper.Map<PostResponseDTO>(post);
         }
 
+        public async Task<IEnumerable<PostResponseDTO>> GetByCategoryAsync(int categoryId, int page, int pageSize)
+        {
+            var posts = await _postRepo.GetByCategoryAsync(categoryId, page, pageSize);
+            return _mapper.Map<IEnumerable<PostResponseDTO>>(posts);
+        }
+
         public async Task<IEnumerable<PostResponseDTO>> GetAllPublishedAsync(int page, int pageSize)
         {
             var posts = await _postRepo.GetAllPublishedAsync(page, pageSize);

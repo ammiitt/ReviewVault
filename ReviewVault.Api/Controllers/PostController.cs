@@ -44,6 +44,24 @@ namespace ReviewVault.Api.Controllers
             return Ok(post);
         }
 
+        // Add this method alongside the existing GetBySlug
+        [HttpGet("id/{id}")]
+        public async Task<ActionResult<PostResponseDTO>> GetById(int id)
+        {
+            var post = await _postService.GetByIdAsync(id);
+            return Ok(post);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<ActionResult<IEnumerable<PostResponseDTO>>> GetByCategory(
+        int categoryId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+        {
+            var posts = await _postService.GetByCategoryAsync(categoryId, page, pageSize);
+            return Ok(posts);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<PostResponseDTO>> Create(CreateRequestDTO request)

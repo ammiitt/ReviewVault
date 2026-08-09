@@ -17,10 +17,12 @@ namespace ReviewVault.Application.DTOs.ResponseDTOs
         public int Rating { get; set; }
         public string RatingName { get; set; } = string.Empty;
         public string MediaTypeName { get; set; } = string.Empty;
+        public int MediaTypeId { get; set; }
         public string AuthorName { get; set; } = string.Empty;
         public bool IsPublished { get; set; }
         public DateTime? PublishedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<string> Categories { get; set; } = new();
+        public List<int> CategoryIds { get; set; } = new();
     }
 }

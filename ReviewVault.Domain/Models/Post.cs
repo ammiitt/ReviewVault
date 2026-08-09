@@ -29,5 +29,6 @@ namespace ReviewVault.Domain.Models
         public string AuthorName { get; set; } = string.Empty;
         public string MediaTypeName { get; set; } = string.Empty;
         public List<string> Categories { get; set; } = new();
+        public List<int> CategoryIds { get; set; } = new();
     }
 }
