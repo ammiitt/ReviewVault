@@ -10,28 +10,28 @@ A full-stack blog platform for movie, anime, and series reviews. Built with **.N
 ## 📸 Screenshots
 
 ### Home Page (Dark Mode)
-![Home Dark](docs/screenshots/home-dark.png)
+![Home Dark](docs/Screenshots/home-dark.png)
 
 ### Home Page (Light Mode)
-![Home Light](docs/screenshots/home-light.png)
+![Home Light](docs/Screenshots/home-light.png)
 
 ### Post Detail
-![Post Detail](docs/screenshots/post-detail.png)
+![Post Detail](docs/Screenshots/post-detail.png)
 
 ### Trending
-![Trending](docs/screenshots/trending.png)
+![Trending](docs/Screenshots/trending.png)
 
 ### Category Filter
-![Category](docs/screenshots/category.png)
+![Category](docs/Screenshots/category.png)
 
 ### Admin Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](docs/Screenshots/dashboard.png)
 
 ### Create Post
-![Create Post](docs/screenshots/create-post.png)
+![Create Post](docs/Screenshots/create-post.png)
 
 ### Login
-![Login](docs/screenshots/login.png)
+![Login](docs/Screenshots/login.png)
 
 ---
 
