@@ -2,7 +2,7 @@
 
 A full-stack blog platform for movie, anime, and series reviews. Built with **.NET 8** and **Angular 17+**, following **Onion Architecture** principles with JWT authentication, deployed on **Microsoft Azure**.
 
-🔗 **Live Site:** [ReviewVault](https://zealous-ocean-0cec1c710.azurestaticapps.net)
+🔗 **Live Site:** [ReviewVault](https://zealous-ocean-0cec1c710.7.azurestaticapps.net/)
 🔗 **API Docs:** [Swagger](https://reviewvault-api-c8cabmamg0brachb.centralindia-01.azurewebsites.net/swagger)
 
 ---
