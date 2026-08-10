@@ -21,6 +21,7 @@ export class Trending implements OnInit {
 
     selectedSection = 'reviews';
     loading = false;
+    jikanError = false;
 
     // Your reviews
     reviewPosts: PostResponse[] = [];
@@ -113,25 +114,35 @@ export class Trending implements OnInit {
 
     // ═══ JIKAN ═══
     loadAnime(): void {
-        this.loading = true;
-        this.jikanService.getTopAnime(20).subscribe({
-            next: (response) => {
-                this.jikanItems = response.data;
-                this.loading = false;
-            },
-            error: () => this.loading = false
-        });
-    }
+    this.loading = true;
+    this.jikanError = false;
+    this.jikanService.getTopAnime(20).subscribe({
+        next: (response) => {
+            this.jikanItems = response.data;
+            this.jikanError = response.data.length === 0;
+            this.loading = false;
+        },
+        error: () => {
+            this.jikanError = true;
+            this.loading = false;
+        }
+    });
+}
 
-    loadManga(): void {
-        this.loading = true;
-        this.jikanService.getTopManga(20).subscribe({
-            next: (response) => {
-                this.jikanItems = response.data;
-                this.loading = false;
-            },
-            error: () => this.loading = false
-        });
+   loadManga(): void {
+    this.loading = true;
+    this.jikanError = false;
+    this.jikanService.getTopManga(20).subscribe({
+        next: (response) => {
+            this.jikanItems = response.data;
+            this.jikanError = response.data.length === 0;
+            this.loading = false;
+        },
+        error: () => {
+            this.jikanError = true;
+            this.loading = false;
+        }
+    });
     }
 
     // TMDB image URL builder

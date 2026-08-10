@@ -112,7 +112,13 @@
         </div>
     </div>
     <div *ngIf="jikanItems.length === 0" class="text-center py-5">
-        <i class="bi bi-book display-3 text-body-secondary"></i>
-        <p class="text-body-secondary mt-3">No results found</p>
+    <i class="bi bi-cloud-slash display-3 text-body-secondary"></i>
+    <p class="text-body-secondary mt-3" *ngIf="!jikanError">No results found</p>
+    <p class="text-body-secondary mt-3" *ngIf="jikanError">
+        MyAnimeList is temporarily unavailable. This happens sometimes.
+    </p>
+    <button class="btn btn-outline-primary btn-sm mt-2" (click)="onSectionChange()">
+        <i class="bi bi-arrow-clockwise me-1"></i>Try Again
+    </button>
     </div>
 </div>
