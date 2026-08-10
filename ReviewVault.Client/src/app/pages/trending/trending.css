@@ -2,6 +2,56 @@
     display: block;
 }
 
-.z-1 {
+.rank-badge {
     z-index: 1;
+    font-size: 0.85rem;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.tmdb-card {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tmdb-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+.tmdb-poster {
+    height: 320px;
+    object-fit: cover;
+}
+
+.tmdb-title {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.form-select-lg {
+    border-radius: 12px;
+    border: 2px solid rgba(108, 92, 231, 0.3);
+}
+
+.form-select-lg:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.15);
+}
+
+@media (max-width: 768px) {
+    .tmdb-poster {
+        height: 240px;
+    }
 }

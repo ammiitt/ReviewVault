@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeToggle } from '../theme-toggle/theme-toggle';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { ThemeService } from '../../core/services/theme';
 @Component({
@@ -14,10 +14,12 @@ export class Navbar implements OnInit {
   isLoggedIn = false;
     username = '';
     isDark = false;
+    
 
     constructor(
         private authService: AuthService,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -35,5 +37,6 @@ export class Navbar implements OnInit {
 
     logout(): void {
         this.authService.logout();
+        this.router.navigate(['/']);
     }
 }

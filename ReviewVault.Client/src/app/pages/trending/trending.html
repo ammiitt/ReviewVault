@@ -1,48 +1,118 @@
 <!-- Header -->
-<div class="text-center mb-5">
+<div class="text-center mb-4">
     <h1 class="display-6 fw-bold">
-        <i class="bi bi-fire text-danger me-2"></i>Trending Posts
+        <i class="bi bi-fire text-danger me-2"></i>Trending
     </h1>
-    <p class="text-body-secondary">The highest rated reviews on ReviewVault</p>
+    <p class="text-body-secondary">Discover what's hot right now</p>
 </div>
 
-<!-- Filter by media type -->
-<div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
-    <button class="btn btn-sm"
-            [ngClass]="selectedType === 'all' ? 'btn-primary' : 'btn-outline-primary'"
-            (click)="filterByType('all')">
-        All
-    </button>
-    <button *ngFor="let mt of mediaTypes"
-            class="btn btn-sm"
-            [ngClass]="selectedType === mt.name ? 'btn-primary' : 'btn-outline-primary'"
-            (click)="filterByType(mt.name)">
-        {{ mt.name }}
-    </button>
+<!-- Main dropdown -->
+<div class="d-flex justify-content-center mb-4">
+    <select class="form-select form-select-lg text-center fw-bold"
+            style="max-width: 350px; cursor: pointer"
+            [(ngModel)]="selectedSection"
+            (ngModelChange)="onSectionChange()">
+        <option value="reviews">📝 Your Reviews</option>
+        <option value="movies">🎬 Top Movies</option>
+        <option value="tvshows">📺 Top TV Shows</option>
+        <option value="anime">🎌 Top Anime</option>
+        <option value="manga">📖 Top Manga</option>
+        <option value="kdrama">🇰🇷 Popular K-Drama</option>
+    </select>
 </div>
 
 <!-- Loading -->
 <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary"></div>
+    <p class="text-body-secondary mt-2">Loading...</p>
 </div>
 
-<!-- Posts Grid -->
-<div class="row g-4" *ngIf="!loading">
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let post of getFilteredPosts(); let i = index">
-        <div class="position-relative">
-            <!-- Rank badge -->
-            <span class="badge bg-danger position-absolute top-0 start-0 m-2 z-1"
-                  style="font-size: 0.9rem; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center"
-                  *ngIf="i < 3">
-                {{ i + 1 }}
-            </span>
-            <app-post-card [post]="post"></app-post-card>
+<!-- ═══ YOUR REVIEWS ═══ -->
+<div *ngIf="!loading && selectedSection === 'reviews'">
+    <div class="row g-4" *ngIf="reviewPosts.length > 0">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3"
+             *ngFor="let post of reviewPosts; let i = index">
+            <div class="position-relative">
+                <span class="badge bg-danger position-absolute top-0 start-0 m-2 rank-badge"
+                      *ngIf="i < 3">#{{ i + 1 }}</span>
+                <app-post-card [post]="post"></app-post-card>
+            </div>
         </div>
+    </div>
+    <div *ngIf="reviewPosts.length === 0" class="text-center py-5">
+        <i class="bi bi-journal-x display-3 text-body-secondary"></i>
+        <p class="text-body-secondary mt-3">No reviews yet</p>
     </div>
 </div>
 
-<!-- No posts -->
-<div *ngIf="!loading && getFilteredPosts().length === 0" class="text-center py-5">
-    <i class="bi bi-journal-x display-3 text-body-secondary"></i>
-    <p class="text-body-secondary mt-3">No posts found</p>
+<!-- ═══ TMDB CONTENT (Movies / TV / K-Drama) ═══ -->
+<div *ngIf="!loading && (selectedSection === 'movies' || selectedSection === 'tvshows' || selectedSection === 'kdrama')">
+    <div class="row g-4" *ngIf="tmdbItems.length > 0">
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let item of tmdbItems; let i = index">
+            <div class="card h-100 border-0 shadow-sm tmdb-card">
+                <div class="position-relative">
+                    <!-- Rank -->
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rank-badge"
+                          *ngIf="i < 3">#{{ i + 1 }}</span>
+                    <!-- Rating -->
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                        <i class="bi bi-star-fill me-1"></i>{{ item.vote_average | number:'1.1-1' }}
+                    </span>
+                    <!-- Poster -->
+                    <img [src]="getImageUrl(item.poster_path)"
+                         [alt]="item.title || item.name"
+                         class="card-img-top tmdb-poster">
+                </div>
+                <div class="card-body p-2">
+                    <h6 class="card-title fw-bold mb-1 tmdb-title">
+                        {{ item.title || item.name }}
+                    </h6>
+                    <small class="text-body-secondary">
+                        {{ item.release_date || item.first_air_date | date:'yyyy' }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="tmdbItems.length === 0" class="text-center py-5">
+        <i class="bi bi-film display-3 text-body-secondary"></i>
+        <p class="text-body-secondary mt-3">No results found</p>
+    </div>
+</div>
+
+<!-- ═══ JIKAN CONTENT (Anime / Manga) ═══ -->
+<div *ngIf="!loading && (selectedSection === 'anime' || selectedSection === 'manga')">
+    <div class="row g-4" *ngIf="jikanItems.length > 0">
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let item of jikanItems; let i = index">
+            <div class="card h-100 border-0 shadow-sm tmdb-card">
+                <div class="position-relative">
+                    <!-- Rank -->
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rank-badge"
+                          *ngIf="i < 3">#{{ i + 1 }}</span>
+                    <!-- Rating -->
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2" *ngIf="item.score">
+                        <i class="bi bi-star-fill me-1"></i>{{ item.score }}
+                    </span>
+                    <!-- Poster -->
+                    <img [src]="item.images.jpg.large_image_url"
+                         [alt]="item.title_english || item.title"
+                         class="card-img-top tmdb-poster">
+                </div>
+                <div class="card-body p-2">
+                    <h6 class="card-title fw-bold mb-1 tmdb-title">
+                        {{ item.title_english || item.title }}
+                    </h6>
+                    <small class="text-body-secondary">
+                        <span *ngIf="item.episodes">{{ item.episodes }} eps</span>
+                        <span *ngIf="item.chapters">{{ item.chapters }} ch</span>
+                        · {{ item.type }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="jikanItems.length === 0" class="text-center py-5">
+        <i class="bi bi-book display-3 text-body-secondary"></i>
+        <p class="text-body-secondary mt-3">No results found</p>
+    </div>
 </div>
