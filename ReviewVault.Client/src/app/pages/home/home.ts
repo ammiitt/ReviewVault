@@ -4,10 +4,11 @@ import { PostService } from '../../core/services/post';
 import { CommonModule } from '@angular/common';
 import { PostCard } from '../../shared/post-card/post-card';
 import { RouterModule } from '@angular/router';
+import { Pagination } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, PostCard, RouterModule ],
+  imports: [CommonModule, PostCard, RouterModule, Pagination ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -17,8 +18,9 @@ export class Home implements OnInit {
     loading = false;
     error = '';
     currentPage = 1;
-    pageSize = 8;
+    pageSize = 4;
     totalPages = 1;
+    totalCount = 0;
 
     constructor(private postService: PostService) { }
 
@@ -37,7 +39,10 @@ export class Home implements OnInit {
             next: (response) => {
                 this.posts = response.data;
                 this.totalPages = response.totalPages;
+                this.totalCount = response.totalCount;
                 this.loading = false;
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             // Error — something went wrong
             error: (err) => {

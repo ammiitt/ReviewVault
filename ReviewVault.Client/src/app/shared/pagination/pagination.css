@@ -1,0 +1,24 @@
+.page-link {
+    cursor: pointer;
+    border-radius: 8px !important;
+    margin: 0 2px;
+    min-width: 38px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.page-item.active .page-link {
+    background-color: #6c5ce7;
+    border-color: #6c5ce7;
+}
+
+.page-link:hover {
+    background-color: rgba(108, 92, 231, 0.1);
+    color: #6c5ce7;
+    border-color: rgba(108, 92, 231, 0.3);
+}
+
+.page-item.disabled .page-link {
+    cursor: default;
+}
