@@ -1,0 +1,18 @@
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div *ngFor="let toast of toasts"
+         class="toast show border-0 shadow-lg"
+         [ngClass]="getToastClass(toast.type)"
+         role="alert">
+        <div class="toast-header border-0" [ngClass]="getHeaderClass(toast.type)">
+            <i class="bi me-2" [ngClass]="getIconClass(toast.type)"></i>
+            <strong class="me-auto">{{ toast.title }}</strong>
+            <button type="button" class="btn-close btn-close-white"
+                    (click)="dismiss(toast.id)"></button>
+        </div>
+        <div class="toast-body">
+            {{ toast.message }}
+        </div>
+        <!-- Progress bar -->
+        <div class="toast-progress" [ngClass]="getProgressClass(toast.type)"></div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReviewVault.Application.DTOs.RequestDTOs;
 using ReviewVault.Application.DTOs.ResponseDTOs;
@@ -21,6 +22,14 @@ namespace ReviewVault.Api.Controllers
         public async Task<ActionResult<AuthResponseDTO>> Register(RegisterRequestDTO request)
         {
             var response = await _authService.RegisterAsync(request);
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("register-admin")]
+        public async Task<ActionResult<AuthResponseDTO>> RegisterAdmin(RegisterRequestDTO request)
+        {
+            var response = await _authService.RegisterAdminAsync(request);
             return Ok(response);
         }
 

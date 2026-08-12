@@ -1,82 +1,89 @@
-<p>login w<div class="row justify-content-center">
-    <div class="col-md-5 col-lg-4">
-
-        <div class="text-center mb-4">
-            <i class="bi bi-film display-3 text-primary"></i>
-            <h2 class="fw-bold mt-2">Welcome Back</h2>
-            <p class="text-body-secondary">Login to manage your blog</p>
-        </div>
-
-        <!-- Error message -->
-        <div *ngIf="error" class="alert alert-danger d-flex align-items-center">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            {{ error }}
-        </div>
-
-        <!-- Login Form -->
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
-            <!-- Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-envelope"></i>
-                    </span>
-                    <input
-                        type="email"
-                        id="email"
-                        class="form-control"
-                        formControlName="email"
-                        placeholder="amit@reviewvault.com"
-                        [ngClass]="{'is-invalid': submitted && f['email'].errors}">
-                    <div class="invalid-feedback" *ngIf="submitted && f['email'].errors">
-                        <span *ngIf="f['email'].errors['required']">Email is required</span>
-                        <span *ngIf="f['email'].errors['email']">Invalid email format</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Password -->
-            <div class="mb-4">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-lock"></i>
-                    </span>
-                    <input
-                        [type]="showPassword ? 'text' : 'password'"
-                        id="password"
-                        class="form-control"
-                        formControlName="password"
-                        placeholder="Enter your password"
-                        [ngClass]="{'is-invalid': submitted && f['password'].errors}">
-                    <button class="btn btn-outline-secondary" type="button"
-                            (click)="showPassword = !showPassword">
-                        <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-                    </button>
-                    <div class="invalid-feedback" *ngIf="submitted && f['password'].errors">
-                        Password is required
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="loading">
-                <span *ngIf="!loading">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                </span>
-                <span *ngIf="loading">
-                    <span class="spinner-border spinner-border-sm me-2"></span>Logging in...
-                </span>
-            </button>
-        </form>
-
-        <div class="text-center mt-4">
-            <a routerLink="/" class="text-body-secondary text-decoration-none">
-                <i class="bi bi-arrow-left me-1"></i>Back to Home
-            </a>
-        </div>
-
+<div class="row justify-content-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="text-center mb-4">
+      <i class="bi bi-film display-3 text-primary"></i>
+      <h2 class="fw-bold mt-2">Welcome Back</h2>
+      <p class="text-body-secondary">Login to manage your blog</p>
     </div>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="alert alert-danger d-flex align-items-center">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-envelope"></i>
+          </span>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="amit@reviewvault.com"
+            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+          />
+          <div class="invalid-feedback" *ngIf="submitted && f['email'].errors">
+            <span *ngIf="f['email'].errors['required']">Email is required</span>
+            <span *ngIf="f['email'].errors['email']">Invalid email format</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-lock"></i>
+          </span>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="showPassword = !showPassword"
+          >
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+          <div class="invalid-feedback" *ngIf="submitted && f['password'].errors">
+            Password is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="loading">
+        <span *ngIf="!loading"> <i class="bi bi-box-arrow-in-right me-2"></i>Login </span>
+        <span *ngIf="loading">
+          <span class="spinner-border spinner-border-sm me-2"></span>Logging in...
+        </span>
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="text-body-secondary mb-1">Don't have an account?</p>
+      <a routerLink="/register" class="text-decoration-none fw-bold">
+        <i class="bi bi-person-plus me-1"></i>Create Account
+      </a>
+    </div>
+
+    <div class="text-center mt-3">
+      <a routerLink="/" class="text-body-secondary text-decoration-none">
+        <i class="bi bi-arrow-left me-1"></i>Back to Home
+      </a>
+    </div>
+  </div>
 </div>

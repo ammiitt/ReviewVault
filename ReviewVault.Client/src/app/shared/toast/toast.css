@@ -1,0 +1,46 @@
+.toast {
+    min-width: 300px;
+    animation: slideIn 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.toast-body {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.btn-close-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Progress bar animation */
+.toast-progress {
+    height: 3px;
+    animation: shrink 3s linear forwards;
+}
+
+.progress-success { background: rgba(255, 255, 255, 0.5); }
+.progress-error { background: rgba(255, 255, 255, 0.5); }
+.progress-warning { background: rgba(0, 0, 0, 0.2); }
+.progress-info { background: rgba(255, 255, 255, 0.5); }
+
+@keyframes shrink {
+    from { width: 100%; }
+    to { width: 0%; }
+}

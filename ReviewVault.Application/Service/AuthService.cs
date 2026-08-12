@@ -32,7 +32,21 @@ namespace ReviewVault.Application.Service
 
             var user = _mapper.Map<User>(request);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            user.Role = "Admin";
+            user.Role = "User";
+            user.CreatedAt = DateTime.UtcNow;
+
+            var createdUser = await _userRepo.CreateAsync(user);
+            return await GenerateAuthResponse(createdUser);
+        }
+
+        public async Task<AuthResponseDTO> RegisterAdminAsync(RegisterRequestDTO request)
+        {
+            if (await _userRepo.ExistsAsync(request.Email))
+                throw new Exception("Email already registered");
+
+            var user = _mapper.Map<User>(request);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            user.Role = "Admin";    // ← Admin role
             user.CreatedAt = DateTime.UtcNow;
 
             var createdUser = await _userRepo.CreateAsync(user);

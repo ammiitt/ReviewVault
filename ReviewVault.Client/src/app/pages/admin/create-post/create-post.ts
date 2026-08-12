@@ -6,6 +6,7 @@ import { CategoryResponse, MediaTypeResponse } from '../../../core/models/catego
 import { CategoryService } from '../../../core/services/category';
 import { MediaTypeService } from '../../../core/services/media-type';
 import { PostService } from '../../../core/services/post';
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-create-post',
@@ -29,7 +30,8 @@ export class CreatePost {
         private postService: PostService,
         private categoryService: CategoryService,
         private mediaTypeService: MediaTypeService,
-        private router: Router
+        private router: Router,
+        private toastr: ToastService
     ) {
         this.postForm = this.fb.group({
             title: ['', [Validators.required, Validators.maxLength(200)]],
@@ -71,37 +73,40 @@ export class CreatePost {
         (event.target as HTMLImageElement).style.display = 'none';
     }
 
-    onSubmit(): void {
-        this.submitted = true;
-        this.error = '';
-        this.success = false;
+   onSubmit(): void {
+    this.submitted = true;
+    this.error = '';
+    this.success = false;
 
-        // Check categories separately (not in FormGroup)
-        if (this.postForm.invalid || this.selectedCategoryIds.length === 0) return;
-
-        this.loading = true;
-
-        const request = {
-            ...this.postForm.value,
-            rating: Number(this.postForm.value.rating),
-            mediaTypeId: Number(this.postForm.value.mediaTypeId),
-            categoryIds: this.selectedCategoryIds
-        };
-
-        this.postService.create(request).subscribe({
-            next: (post) => {
-                this.success = true;
-                this.createdSlug = post.slug;
-                this.loading = false;
-                // Reset form
-                this.postForm.reset({ isPublished: false, rating: 0, mediaTypeId: 0 });
-                this.selectedCategoryIds = [];
-                this.submitted = false;
-            },
-            error: (err) => {
-                this.error = err.message;
-                this.loading = false;
-            }
-        });
+    if (this.postForm.invalid || this.selectedCategoryIds.length === 0) {
+        this.toastr.warning('Please fill all required fields', 'Validation');
+        return;
     }
+
+    this.loading = true;
+
+    const request = {
+        ...this.postForm.value,
+        rating: Number(this.postForm.value.rating),
+        mediaTypeId: Number(this.postForm.value.mediaTypeId),
+        categoryIds: this.selectedCategoryIds
+    };
+
+    this.postService.create(request).subscribe({
+        next: (post) => {
+            this.success = true;
+            this.createdSlug = post.slug;
+            this.loading = false;
+            this.toastr.success(`"${post.title}" created!`, 'Post Published 🎬');
+            this.postForm.reset({ isPublished: false, rating: 0, mediaTypeId: 0 });
+            this.selectedCategoryIds = [];
+            this.submitted = false;
+        },
+        error: (err) => {
+            this.error = err.message;
+            this.toastr.error(err.message, 'Failed to Create');
+            this.loading = false;
+        }
+    });
+}
 }

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PostResponse } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post';
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,9 @@ export class Dashboard {
     loading = false;
     filter: 'all' | 'published' | 'draft' = 'all';
 
-    constructor(private postService: PostService) { }
+    constructor(private postService: PostService,
+        private toastr: ToastService,
+    ) { }
 
     ngOnInit(): void {
         this.loadPosts();
@@ -59,17 +62,17 @@ export class Dashboard {
         }
     }
 
-    deletePost(id: number, title: string): void {
-        if (confirm(`Delete "${title}"? This cannot be undone.`)) {
-            this.postService.remove(id).subscribe({
-                next: () => {
-                    // Remove from local array without reloading
-                    this.posts = this.posts.filter(p => p.id !== id);
-                },
-                error: (err) => {
-                    alert('Failed to delete: ' + err.message);
-                }
-            });
-        }
+   deletePost(id: number, title: string): void {
+    if (confirm(`Delete "${title}"? This cannot be undone.`)) {
+        this.postService.remove(id).subscribe({
+            next: () => {
+                this.posts = this.posts.filter(p => p.id !== id);
+                this.toastr.success(`"${title}" deleted`, 'Post Removed 🗑️');
+            },
+            error: (err) => {
+                this.toastr.error(err.message, 'Delete Failed');
+            }
+        });
     }
+}
 }

@@ -19,4 +19,24 @@ export const authGuard: CanActivateFn = (route, state) => {
     // ❌ Not logged in or not admin → redirect to login
     router.navigate(['/login']);
     return false;
+
+};
+
+export const adminGuard: CanActivateFn = (route, state) => {
+
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (authService.isLoggedIn() && authService.isAdmin()) {
+        return true;
+    }
+
+    if (authService.isLoggedIn()) {
+        // Logged in but not admin → go home
+        router.navigate(['/']);
+    } else {
+        // Not logged in → go to login
+        router.navigate(['/login']);
+    }
+    return false;
 };

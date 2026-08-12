@@ -1,0 +1,26 @@
+:host {
+    display: block;
+    padding-top: 2rem;
+}
+
+.form-control:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.15);
+}
+
+.btn-primary {
+    background: #6c5ce7;
+    border-color: #6c5ce7;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #5a4bd1;
+    border-color: #5a4bd1;
+}
+
+.input-group-text {
+    min-width: 42px;
+    justify-content: center;
+}

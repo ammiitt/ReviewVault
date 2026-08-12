@@ -7,6 +7,7 @@ import { MediaTypeService } from '../../../core/services/media-type';
 import { CategoryService } from '../../../core/services/category';
 import { PostService } from '../../../core/services/post';
 import { CategoryResponse, MediaTypeResponse } from '../../../core/models/category.model';
+import { ToastService } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-edit-post',
@@ -34,7 +35,8 @@ export class EditPost  {
         private router: Router,
         private postService: PostService,
         private categoryService: CategoryService,
-        private mediaTypeService: MediaTypeService
+        private mediaTypeService: MediaTypeService,
+        private toastr: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -116,33 +118,38 @@ export class EditPost  {
     }
 
     onSubmit(): void {
-        this.submitted = true;
-        this.error = '';
-        this.success = false;
+    this.submitted = true;
+    this.error = '';
+    this.success = false;
 
-        if (this.postForm.invalid || this.selectedCategoryIds.length === 0) return;
-
-        this.loading = true;
-
-        const request = {
-            ...this.postForm.value,
-            rating: Number(this.postForm.value.rating),
-            mediaTypeId: Number(this.postForm.value.mediaTypeId),
-            categoryIds: this.selectedCategoryIds
-        };
-
-        this.postService.update(this.postId, request).subscribe({
-            next: (post) => {
-                this.success = true;
-                this.updatedSlug = post.slug;
-                this.currentSlug = post.slug;
-                this.loading = false;
-                this.submitted = false;
-            },
-            error: (err) => {
-                this.error = err.message;
-                this.loading = false;
-            }
-        });
+    if (this.postForm.invalid || this.selectedCategoryIds.length === 0) {
+        this.toastr.warning('Please fill all required fields', 'Validation');
+        return;
     }
+
+    this.loading = true;
+
+    const request = {
+        ...this.postForm.value,
+        rating: Number(this.postForm.value.rating),
+        mediaTypeId: Number(this.postForm.value.mediaTypeId),
+        categoryIds: this.selectedCategoryIds
+    };
+
+    this.postService.update(this.postId, request).subscribe({
+        next: (post) => {
+            this.success = true;
+            this.updatedSlug = post.slug;
+            this.currentSlug = post.slug;
+            this.loading = false;
+            this.submitted = false;
+            this.toastr.success(`"${post.title}" updated!`, 'Post Updated ✅');
+        },
+        error: (err) => {
+            this.error = err.message;
+            this.toastr.error(err.message, 'Update Failed');
+            this.loading = false;
+        }
+    });
+}
 }

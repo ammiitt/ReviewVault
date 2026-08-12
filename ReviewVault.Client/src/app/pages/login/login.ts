@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../core/services/toast';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class Login {
     constructor(
         private fb: FormBuilder,        // helps create forms easily
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private toastr: ToastService
     ) {
         // Create form with validation rules
         this.loginForm = this.fb.group({
@@ -44,10 +46,12 @@ export class Login {
         this.authService.login(this.loginForm.value).subscribe({
             next: () => {
                 // Login success → go to admin dashboard
+                this.toastr.success('Welcome back!', 'Login Successful 🎉');
                 this.router.navigate(['/admin/dashboard']);
             },
             error: (err) => {
                 this.error = err.message;
+                this.toastr.error(err.message, 'Login Failed');
                 this.loading = false;
             }
         });

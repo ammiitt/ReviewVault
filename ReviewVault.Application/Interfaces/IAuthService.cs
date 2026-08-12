@@ -11,6 +11,7 @@ namespace ReviewVault.Application.Interfaces
     public interface IAuthService
     {
         Task<AuthResponseDTO> RegisterAsync(RegisterRequestDTO request);
+        Task<AuthResponseDTO> RegisterAdminAsync(RegisterRequestDTO request);
         Task<AuthResponseDTO> LoginAsync(LoginRequestDTO request);
         Task<AuthResponseDTO> RefreshTokenAsync(RefreshTokenRequestDTO request);
         Task RevokeTokenAsync(string token);

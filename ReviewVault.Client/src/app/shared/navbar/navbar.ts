@@ -4,6 +4,7 @@ import { ThemeToggle } from '../theme-toggle/theme-toggle';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { ThemeService } from '../../core/services/theme';
+import { ToastService } from '../../core/services/toast';
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, RouterModule, ThemeToggle],
@@ -11,7 +12,8 @@ import { ThemeService } from '../../core/services/theme';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
-  isLoggedIn = false;
+    isLoggedIn = false;
+    isAdmin = false;
     username = '';
     isDark = false;
     
@@ -19,7 +21,8 @@ export class Navbar implements OnInit {
     constructor(
         private authService: AuthService,
         private themeService: ThemeService,
-        private router: Router
+        private router: Router,
+        private toastr : ToastService
     ) { }
 
     ngOnInit(): void {
@@ -27,6 +30,7 @@ export class Navbar implements OnInit {
         this.authService.currentUser$.subscribe(user => {
             this.isLoggedIn = user !== null;
             this.username = user?.username || '';
+            this.isAdmin = user?.role === 'Admin';
         });
 
         // Subscribe to theme changes
@@ -37,6 +41,7 @@ export class Navbar implements OnInit {
 
     logout(): void {
         this.authService.logout();
+        this.toastr.success('Logged out successfully', 'Goodbye! 👋');
         this.router.navigate(['/']);
     }
 }

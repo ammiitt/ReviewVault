@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard , adminGuard} from './core/guards/auth.guard';
 
 export const routes: Routes = [
     // Public routes
@@ -29,19 +29,24 @@ export const routes: Routes = [
         path: 'admin/dashboard',
         loadComponent: () => import('./pages/admin/dashboard/dashboard')
             .then(m => m.Dashboard),
-        canActivate: [authGuard]
+        canActivate: [adminGuard]
     },
     {
         path: 'admin/create-post',
         loadComponent: () => import('./pages/admin/create-post/create-post')
             .then(m => m.CreatePost),
-        canActivate: [authGuard]
+        canActivate: [adminGuard]
     },
     {
         path: 'admin/edit-post/:id',
         loadComponent: () => import('./pages/admin/edit-post/edit-post')
             .then(m => m.EditPost),
-        canActivate: [authGuard]
+        canActivate: [adminGuard]
+    },
+    {
+        path: 'register',
+        loadComponent: () => import('./pages/register/register')
+            .then(m => m.Register)
     },
     {
     path: 'trending',
@@ -51,5 +56,6 @@ export const routes: Routes = [
 
     // Wildcard — any unknown URL goes to home
     { path: '**', redirectTo: '' }
+
     
 ];

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PostResponse } from '../../core/models/post.model';
 import { PostService } from '../../core/services/post';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../core/services/toast';
 
 @Component({
   selector: 'app-post-detail',
@@ -18,7 +19,8 @@ export class PostDetail {
     constructor(
         private route: ActivatedRoute,    // reads URL parameters
         private router: Router,
-        private postService: PostService
+        private postService: PostService,
+        private toastr: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -75,20 +77,18 @@ export class PostDetail {
 
     // Share using browser's native share or copy URL
     sharePost(): void {
-        const url = window.location.href;
+    const url = window.location.href;
 
-        if (navigator.share) {
-            // Mobile native share
-            navigator.share({
-                title: this.post?.title,
-                text: this.post?.summary || '',
-                url: url
-            });
-        } else {
-            // Desktop: copy to clipboard
-            navigator.clipboard.writeText(url).then(() => {
-                alert('Link copied to clipboard!');
-            });
-        }
+    if (navigator.share) {
+        navigator.share({
+            title: this.post?.title,
+            text: this.post?.summary || '',
+            url: url
+        });
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            this.toastr.success('Link copied to clipboard!', 'Share 📋');
+        });
     }
+}
 }
