@@ -104,4 +104,83 @@
         </div>
     </div>
 
+    <!-- ═══ COMMENTS SECTION ═══ -->
+    <div class="mt-5 pt-4 border-top">
+        <h4 class="fw-bold mb-4">
+            <i class="bi bi-chat-dots me-2"></i>Comments ({{ comments.length }})
+        </h4>
+
+        <!-- Write comment (logged in users only) -->
+        <div *ngIf="isLoggedIn" class="mb-4">
+            <div class="d-flex gap-3">
+                <div class="flex-shrink-0">
+                    <i class="bi bi-person-circle display-6 text-primary"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <textarea class="form-control mb-2"
+                              [(ngModel)]="newComment"
+                              rows="3"
+                              placeholder="Write a comment..."
+                              [maxlength]="1000"></textarea>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-body-secondary">
+                            {{ newComment.length }}/1000
+                        </small>
+                        <button class="btn btn-primary btn-sm"
+                                [disabled]="!newComment.trim() || commentLoading"
+                                (click)="submitComment()">
+                            <span *ngIf="!commentLoading">
+                                <i class="bi bi-send me-1"></i>Post Comment
+                            </span>
+                            <span *ngIf="commentLoading">
+                                <span class="spinner-border spinner-border-sm me-1"></span>Posting...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login prompt for visitors -->
+        <div *ngIf="!isLoggedIn" class="alert alert-light text-center mb-4">
+            <a routerLink="/login" class="text-decoration-none fw-bold">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Login
+            </a> or
+            <a routerLink="/register" class="text-decoration-none fw-bold">
+                <i class="bi bi-person-plus me-1"></i>Register
+            </a> to leave a comment
+        </div>
+
+        <!-- Comments list -->
+        <div *ngFor="let comment of comments" class="d-flex gap-3 mb-3 p-3 rounded border">
+            <div class="flex-shrink-0">
+                <i class="bi bi-person-circle fs-4 text-body-secondary"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ comment.username }}</strong>
+                        <small class="text-body-secondary ms-2">
+                            {{ comment.createdAt | date:'medium' }}
+                        </small>
+                    </div>
+                    <!-- Delete button — own comment or admin -->
+                    <button *ngIf="canDeleteComment(comment)"
+                            class="btn btn-outline-danger btn-sm"
+                            (click)="deleteComment(comment.id)"
+                            title="Delete comment">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+                <p class="mb-0 mt-1">{{ comment.body }}</p>
+            </div>
+        </div>
+
+        <!-- No comments -->
+        <div *ngIf="comments.length === 0" class="text-center py-4 text-body-secondary">
+            <i class="bi bi-chat display-4"></i>
+            <p class="mt-2">No comments yet. Be the first!</p>
+        </div>
+    </div>
+
 </article>
