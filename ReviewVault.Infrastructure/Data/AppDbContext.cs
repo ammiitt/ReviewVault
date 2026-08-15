@@ -18,6 +18,8 @@ namespace ReviewVault.Infrastructure.Data
         public DbSet<MediaTypeEntity> MediaTypes => Set<MediaTypeEntity>();
         public DbSet<RefreshTokenEntity> RefreshTokens => Set<RefreshTokenEntity>();
 
+        public DbSet<CommentEntity> Comments => Set<CommentEntity>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -154,5 +154,31 @@ namespace ReviewVault.Infrastructure.Mappings
                 RevokedAt = model.RevokedAt
             };
         }
+
+        // ═══ COMMENT ═══
+        public static Comment ToDomain(this CommentEntity entity)
+        {
+            return new Comment
+            {
+                Id = entity.Id,
+                Body = entity.Body,
+                PostId = entity.PostId,
+                UserId = entity.UserId,
+                Username = entity.User?.Username ?? string.Empty,
+                CreatedAt = entity.CreatedAt
+            };
+        }
+
+        public static CommentEntity ToEntity(this Comment model)
+        {
+            return new CommentEntity
+            {
+                Id = model.Id,
+                Body = model.Body,
+                PostId = model.PostId,
+                UserId = model.UserId,
+                CreatedAt = model.CreatedAt
+            };
+        }
     }
 }

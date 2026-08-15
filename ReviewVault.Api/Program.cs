@@ -29,12 +29,14 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IMediaTypeRepository, MediaTypeRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 // ═══ SERVICES (Application layer) ═══
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IMediaTypeService, MediaTypeService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 
 // ═══ EXTERNAL SERVICES (Infrastructure) ═══
