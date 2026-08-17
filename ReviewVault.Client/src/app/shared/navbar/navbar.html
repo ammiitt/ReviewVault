@@ -73,14 +73,20 @@
             </li>
             <li *ngIf="isAdmin"><hr class="dropdown-divider" /></li>
 
-            <!-- All users -->
             <li>
+              <a class="dropdown-item" routerLink="/profile">
+              <i class="bi bi-person me-2"></i>My Profile
+              </a>
+            </li>
+
+            <!-- All users -->
+            <!-- <li>
               <span class="dropdown-item-text text-body-secondary">
                 <small>
                   <i class="bi bi-shield me-1"></i>Role: {{ isAdmin ? 'Admin' : 'User' }}
                 </small>
               </span>
-            </li>
+            </li> -->
             <li><hr class="dropdown-divider" /></li>
             <li>
               <button class="dropdown-item text-danger" (click)="logout()">

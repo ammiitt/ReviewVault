@@ -8,6 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { CommentResponse } from '../../core/models/comment.model';
 import { CommentService } from '../../core/services/comment';
 import { AuthService } from '../../core/services/auth';
+import { LikeService } from '../../core/services/like';
+import { BookmarkService } from '../../core/services/bookmark';
+import { LikeInfo } from '../../core/models/like.model';
 
 @Component({
   selector: 'app-post-detail',
@@ -26,6 +29,8 @@ export class PostDetail {
     isLoggedIn: any;
     currentUserId = 0;
     isAdmin = false;
+    likeInfo: LikeInfo = { count: 0, isLikedByUser: false };
+    isBookmarked = false;
 
 
     constructor(
@@ -34,7 +39,10 @@ export class PostDetail {
         private postService: PostService,
         private toastr: ToastService,
         private commentService: CommentService,
-        private authService: AuthService
+        private authService: AuthService,
+        private likeService: LikeService,
+        private bookmarkService: BookmarkService,
+        
     ) { }
 
     ngOnInit(): void {
@@ -71,6 +79,8 @@ export class PostDetail {
                 // Update browser tab title
                 document.title = `${post.title} | ReviewVault`;
                 this.loadComments(post.id);
+                this.loadLikeInfo(post.id);
+                this.loadBookmarkStatus(post.id);
             },
             error: (err) => {
                 this.error = err.message;
@@ -143,6 +153,45 @@ export class PostDetail {
             default: return 'bg-secondary';
         }
     }
+
+    loadLikeInfo(postId: number): void {
+    this.likeService.getLikeInfo(postId).subscribe({
+        next: (info) => this.likeInfo = info
+    });
+}
+
+loadBookmarkStatus(postId: number): void {
+    if (!this.isLoggedIn || !this.post) return;
+    this.bookmarkService.isBookmarked(this.post.id).subscribe({
+        next: (status) => this.isBookmarked = status
+    });
+}
+
+toggleLike(): void {
+    if (!this.isLoggedIn || !this.post) {
+        this.toastr.warning('Please login to like posts', 'Login Required');
+        return;
+    }
+    this.likeService.toggleLike(this.post.id).subscribe({
+        next: (info) => {
+            this.likeInfo = info;
+            this.toastr.success(info.isLikedByUser ? 'Liked!' : 'Unliked', '❤️');
+        }
+    });
+}
+
+toggleBookmark(): void {
+    if (!this.isLoggedIn || !this.post) {
+        this.toastr.warning('Please login to bookmark posts', 'Login Required');
+        return;
+    }
+    this.bookmarkService.toggleBookmark(this.post.id).subscribe({
+        next: (status) => {
+            this.isBookmarked = status;
+            this.toastr.success(status ? 'Bookmarked!' : 'Removed bookmark', '🔖');
+        }
+    });
+}
 
     // Navigate to category page
     goToCategory(name: string): void {
