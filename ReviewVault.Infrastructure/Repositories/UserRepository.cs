@@ -72,5 +72,29 @@ namespace ReviewVault.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            var entity = await _context.Users.FindAsync(user.Id);
+            if (entity != null)
+            {
+                entity.Username = user.Username;
+                entity.Bio = user.Bio;
+                entity.AvatarUrl = user.AvatarUrl;
+                entity.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdatePasswordAsync(int userId, string newPasswordHash)
+        {
+            var entity = await _context.Users.FindAsync(userId);
+            if (entity != null)
+            {
+                entity.PasswordHash = newPasswordHash;
+                entity.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

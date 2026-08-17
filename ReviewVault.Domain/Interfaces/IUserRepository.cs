@@ -11,5 +11,7 @@ namespace ReviewVault.Domain.Interfaces
         Task<RefreshToken> CreateRefreshTokenAsync(RefreshToken token);
         Task<RefreshToken?> GetRefreshTokenAsync(string token);
         Task RevokeRefreshTokenAsync(string token);
+        Task UpdatePasswordAsync(int userId, string newPasswordHash);
+        Task UpdateAsync(User user);
     }
 }

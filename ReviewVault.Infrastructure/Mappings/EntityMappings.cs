@@ -180,5 +180,54 @@ namespace ReviewVault.Infrastructure.Mappings
                 CreatedAt = model.CreatedAt
             };
         }
+
+        // ═══ LIKE ═══
+        public static Like ToDomain(this LikeEntity entity)
+        {
+            return new Like
+            {
+                Id = entity.Id,
+                UserId = entity.UserId,
+                PostId = entity.PostId,
+                CreatedAt = entity.CreatedAt
+            };
+        }
+
+        public static LikeEntity ToEntity(this Like model)
+        {
+            return new LikeEntity
+            {
+                Id = model.Id,
+                UserId = model.UserId,
+                PostId = model.PostId,
+                CreatedAt = model.CreatedAt
+            };
+        }
+
+        // ═══ BOOKMARK ═══
+        public static Bookmark ToDomain(this BookmarkEntity entity)
+        {
+            return new Bookmark
+            {
+                Id = entity.Id,
+                UserId = entity.UserId,
+                PostId = entity.PostId,
+                PostTitle = entity.Post?.Title ?? string.Empty,
+                PostSlug = entity.Post?.Slug ?? string.Empty,
+                PostCoverImageUrl = entity.Post?.CoverImageUrl,
+                CreatedAt = entity.CreatedAt
+            };
+        }
+
+        public static BookmarkEntity ToEntity(this Bookmark model)
+        {
+            return new BookmarkEntity
+            {
+                Id = model.Id,
+                UserId = model.UserId,
+                PostId = model.PostId,
+                CreatedAt = model.CreatedAt
+            };
+        }
     }
 }

@@ -19,6 +19,8 @@ namespace ReviewVault.Infrastructure.Data
         public DbSet<RefreshTokenEntity> RefreshTokens => Set<RefreshTokenEntity>();
 
         public DbSet<CommentEntity> Comments => Set<CommentEntity>();
+        public DbSet<LikeEntity> Likes => Set<LikeEntity>();
+        public DbSet<BookmarkEntity> Bookmarks => Set<BookmarkEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
