@@ -14,5 +14,7 @@ namespace ReviewVault.Domain.Interfaces
         Task<Comment> CreateAsync(Comment comment);
         Task DeleteAsync(int id);
         Task<int> GetCountByPostIdAsync(int postId);
+
+        Task<int> GetCountByUserIdAsync(int userId);
     }
 }

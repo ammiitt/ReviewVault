@@ -65,5 +65,10 @@ namespace ReviewVault.Infrastructure.Repositories
         {
             return await _context.Comments.CountAsync(c => c.PostId == postId);
         }
+
+        public async Task<int> GetCountByUserIdAsync(int userId)
+        {
+            return await _context.Comments.CountAsync(c => c.UserId == userId);
+        }
     }
 }

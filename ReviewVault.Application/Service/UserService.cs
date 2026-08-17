@@ -29,6 +29,7 @@ namespace ReviewVault.Application.Service
             _bookmarkRepo = bookmarkRepo;
         }
 
+
         public async Task<UserProfileDTO> GetProfileAsync(int userId)
         {
             var user = await _userRepo.GetByIdAsync(userId)
@@ -36,6 +37,7 @@ namespace ReviewVault.Application.Service
 
             var bookmarks = await _bookmarkRepo.GetByUserIdAsync(userId);
             var likedPostIds = await _likeRepo.GetLikedPostIdsByUserAsync(userId);
+            var commentCount = await _commentRepo.GetCountByUserIdAsync(userId);
 
             return new UserProfileDTO
             {
@@ -47,7 +49,8 @@ namespace ReviewVault.Application.Service
                 AvatarUrl = user.AvatarUrl,
                 CreatedAt = user.CreatedAt,
                 TotalBookmarks = bookmarks.Count(),
-                TotalLikes = likedPostIds.Count()
+                TotalLikes = likedPostIds.Count(),
+                TotalComments = commentCount
             };
         }
 
