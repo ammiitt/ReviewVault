@@ -23,11 +23,6 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/login/login')
             .then(m => m.Login)
     },
-    {
-    path: 'trending',
-    loadComponent: () => import('./pages/trending/trending')
-        .then(m => m.Trending)
-    },
 
     // Admin routes — protected by authGuard
     {
@@ -54,11 +49,16 @@ export const routes: Routes = [
             .then(m => m.Register)
     },
     {
+    path: 'trending',
+    loadComponent: () => import('./pages/trending/trending')
+        .then(m => m.Trending)
+    },
+    {
     path: 'profile',
     loadComponent: () => import('./pages/profile/profile')
         .then(m => m.Profile),
     canActivate: [authGuard]
-    },
+},
 
     // Wildcard — any unknown URL goes to home
     { path: '**', redirectTo: '' }
