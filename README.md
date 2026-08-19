@@ -15,14 +15,14 @@ A production-ready blog platform for movie, anime, and series reviews. Built wit
 ### Home Page (Dark Mode)
 ![Home Dark](docs/screenshots/home-dark.png)
 
-### Post Detail with Comments, Likes & Bookmarks
+### Post Detail — Comments, Likes & Bookmarks
 ![Post Detail](docs/screenshots/post-detail.png)
 
-### Trending — External APIs (TMDB + Jikan)
+### Trending — TMDB & Jikan Integration
 ![Trending](docs/screenshots/trending.png)
 
-### Category Filter
-![Category](docs/screenshots/category.png)
+### Search
+![Search](docs/screenshots/search.png)
 
 ### Admin Dashboard
 ![Dashboard](docs/screenshots/dashboard.png)
@@ -30,9 +30,17 @@ A production-ready blog platform for movie, anime, and series reviews. Built wit
 ### Create Post
 ![Create Post](docs/screenshots/create-post.png)
 
+### User Profile
+![Profile](docs/screenshots/profile.png)
+
 ### Login
 ![Login](docs/screenshots/login.png)
 
+### Register — Password Strength Indicators
+![Register](docs/screenshots/register.png)
+
+### About
+![About](docs/screenshots/about.png)
 ---
 
 ## 🏗️ Architecture
