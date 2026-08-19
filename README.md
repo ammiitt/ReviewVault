@@ -1,69 +1,70 @@
-# 🎬 ReviewVault — Movie & Anime Blog Platform
+# 🎬 ReviewVault — Full-Stack Movie & Anime Blog Platform
 
-A full-stack blog platform for movie, anime, and series reviews. Built with **.NET 8** and **Angular 17+**, following **Onion Architecture** principles with JWT authentication, deployed on **Microsoft Azure**.
+A production-ready blog platform for movie, anime, and series reviews. Built with **.NET 8** and **Angular 20**, following **Onion Architecture** principles with JWT authentication, role-based access control, and deployed on **Microsoft Azure** with CI/CD.
 
-🔗 **Live Site:** [ReviewVault](https://zealous-ocean-0cec1c710.7.azurestaticapps.net/)
+🔗 **Live Site:** [ReviewVault](https://zealous-ocean-0cec1c710.7.azurestaticapps.net)
 🔗 **API Docs:** [Swagger](https://reviewvault-api-c8cabmamg0brachb.centralindia-01.azurewebsites.net/swagger)
 
 ---
 
 ## 📸 Screenshots
 
-### Home Page (Dark Mode)
-![Home Dark](docs/Screenshots/home-dark.png)
-
 ### Home Page (Light Mode)
-![Home Light](docs/Screenshots/home-light.png)
+![Home Light](docs/screenshots/home-light.png)
 
-### Post Detail
-![Post Detail](docs/Screenshots/post-detail.png)
+### Home Page (Dark Mode)
+![Home Dark](docs/screenshots/home-dark.png)
 
-### Trending
-![Trending](docs/Screenshots/trending.png)
+### Post Detail with Comments, Likes & Bookmarks
+![Post Detail](docs/screenshots/post-detail.png)
+
+### Trending — External APIs (TMDB + Jikan)
+![Trending](docs/screenshots/trending.png)
 
 ### Category Filter
-![Category](docs/Screenshots/category.png)
+![Category](docs/screenshots/category.png)
 
 ### Admin Dashboard
-![Dashboard](docs/Screenshots/dashboard.png)
+![Dashboard](docs/screenshots/dashboard.png)
 
 ### Create Post
-![Create Post](docs/Screenshots/create-post.png)
+![Create Post](docs/screenshots/create-post.png)
 
 ### Login
-![Login](docs/Screenshots/login.png)
+![Login](docs/screenshots/login.png)
 
 ---
 
 ## 🏗️ Architecture
 
-This project follows **Onion Architecture** with clear separation of concerns:
+This project follows **Onion Architecture** with strict separation of concerns. Inner layers define contracts, outer layers implement them — following the **Dependency Inversion Principle**.
 
 ```
-┌─────────────────────────────────────────────────┐
-│                  API Layer                       │
-│          Controllers, Middleware, Program.cs     │
-├─────────────────────────────────────────────────┤
-│             Infrastructure Layer                 │
-│    EF Entities, DbContext, Repositories,         │
-│    EntityMapper, JwtService                      │
-├─────────────────────────────────────────────────┤
-│              Application Layer                   │
-│    Services, DTOs, AutoMapper, Validators        │
-├─────────────────────────────────────────────────┤
-│               Domain Layer (Core)                │
-│       Pure Models, Enums, Repo Interfaces        │
-│              ZERO dependencies                   │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                        API Layer                              │
+│         Controllers · Middleware · Program.cs (DI Root)       │
+├──────────────────────────────────────────────────────────────┤
+│                   Infrastructure Layer                        │
+│    EF Entities · DbContext · Configs · Repositories ·         │
+│    EntityMapper · JwtService                                  │
+├──────────────────────────────────────────────────────────────┤
+│                    Application Layer                          │
+│      Services · DTOs (Request/Response) · AutoMapper ·        │
+│      FluentValidation · Service Interfaces                    │
+├──────────────────────────────────────────────────────────────┤
+│                   Domain Layer (Core)                         │
+│         Pure Models · Enums · Repository Interfaces           │
+│                    ZERO dependencies                          │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-**Key architectural decisions:**
-- Domain Models are separate from EF Entities (true layer independence)
-- Repository interfaces defined in Domain, implemented in Infrastructure
-- Service interfaces and implementations in Application layer
-- Manual EntityMapper in Infrastructure for Entity ↔ Domain Model conversion
-- AutoMapper in Application for Domain Model ↔ DTO conversion
-- Base API service pattern in Angular for DRY HTTP calls
+### Key Architectural Decisions
+
+- **Domain Models are separate from EF Entities** — Domain layer has zero dependency on EF Core. Infrastructure handles the mapping via a static `EntityMapper`, ensuring true layer independence.
+- **Two mapping strategies** — Manual `EntityMapper` (Infrastructure: Entity ↔ Domain) + AutoMapper (Application: Domain ↔ DTO). Each mapping has a clear purpose and boundary.
+- **Repository interfaces in Domain**, implementations in Infrastructure — services depend on abstractions, not concrete data access.
+- **Base API Service pattern in Angular** — All HTTP services extend `ApiBaseService`, centralizing URL construction, error handling, and HTTP methods (DRY principle).
+- **Lookup Tables over Enums for extensible data** — MediaTypes use a database table (can add K-Drama, Manhua without code changes). Rating uses an Enum (fixed 1-5 scale, won't change).
 
 ---
 
@@ -73,59 +74,70 @@ This project follows **Onion Architecture** with clear separation of concerns:
 | Technology | Purpose |
 |---|---|
 | .NET 8 | Web API framework |
-| Entity Framework Core | ORM (Code First) |
-| SQL Server | Database (Azure SQL) |
-| JWT + Refresh Tokens | Authentication |
-| AutoMapper | Object mapping (Application layer) |
-| FluentValidation | Request validation |
+| Entity Framework Core 8 | ORM — Code First with Migrations |
+| SQL Server | Relational database (Azure SQL) |
+| JWT + Refresh Tokens | Stateless authentication with revocable refresh |
 | BCrypt | Password hashing |
-| Swagger / OpenAPI | API documentation |
+| AutoMapper | Domain ↔ DTO mapping |
+| FluentValidation | Request validation with custom rules |
+| Swagger / OpenAPI | Interactive API documentation |
 
 ### Frontend
 | Technology | Purpose |
 |---|---|
-| Angular 17+ | SPA framework (Standalone Components) |
-| TypeScript | Type-safe JavaScript |
-| Bootstrap 5.3 | UI framework (Dark/Light mode) |
-| Bootstrap Icons | Icon library |
-| RxJS | Reactive programming (Observables) |
+| Angular 20 | SPA framework — Standalone Components (no NgModule) |
+| TypeScript | Type-safe development |
+| Bootstrap 5.3 | Responsive UI with native Dark/Light mode |
+| Bootstrap Icons | 2000+ free icons |
+| RxJS | Reactive state management (BehaviorSubject, Observables) |
+| TMDB API | Real-time movie & TV show data |
+| Jikan API | Real-time anime & manga data from MyAnimeList |
 
 ### Cloud & DevOps
-| Technology | Purpose |
+| Service | Purpose |
 |---|---|
-| Azure App Service | API hosting (Free F1) |
-| Azure SQL Database | Cloud database (Basic tier) |
-| Azure Static Web Apps | Frontend hosting (Free) |
-| GitHub Actions | CI/CD pipeline |
+| Azure App Service (Free F1) | API hosting |
+| Azure SQL Database (Basic) | Cloud database |
+| Azure Static Web Apps (Free) | Frontend hosting with auto-SSL |
+| GitHub Actions | CI/CD — auto-deploys on push to main |
 
 ---
 
 ## ✨ Features
 
-### Public
-- 🎬 Browse movie, anime & series reviews
-- 🔥 Trending page with rating-based sorting
-- 🏷️ Filter posts by category with browse pills
-- 🌙 Dark / Light mode toggle (persists in localStorage)
-- 📱 Fully responsive (mobile, tablet, desktop)
-- 🔗 SEO-friendly URLs with slugs (`/post/attack-on-titan-review`)
+### 🌐 Public (No Login Required)
+- Browse movie, anime & series reviews in a Netflix-style card grid
+- Read full articles with cover images, ratings, and reading time
+- Filter posts by category with interactive browse pills
+- View trending content from TMDB (Movies, TV, K-Drama) and Jikan (Anime, Manga)
+- Search posts by title, body, or summary with paginated results
+- Dark / Light mode toggle (persists across sessions)
+- SEO-friendly URLs with slugs (`/post/attack-on-titan-review`)
+- Fully responsive design (mobile, tablet, desktop)
 
-### Admin
-- 🔐 JWT authentication with refresh tokens
-- 📝 Create, edit, and delete blog posts
-- 📊 Admin dashboard with post stats and filters
-- 🖼️ Cover image preview in post form
-- 📋 Draft / Publish toggle system
-- ✅ Form validation with real-time feedback
+### 👤 User (Login Required)
+- Register with password strength validation (live indicators)
+- Login with JWT authentication
+- Like / Unlike posts (toggle with count)
+- Bookmark / Unbookmark posts for later reading
+- Comment on posts with real-time updates
+- Delete own comments
+- View profile with stats (likes, bookmarks, comments)
+- Change password from profile page
 
-### API
-- 🏛️ Onion Architecture (4 layers)
-- 🔄 Full CRUD operations
-- 📄 Pagination support
-- 🔍 Filter by category and media type
-- 🛡️ Role-based authorization
-- ⚠️ Global exception handling with proper HTTP status codes
-- 📖 Swagger documentation with JWT support
+### 👑 Admin (Admin Role Only)
+- Full CRUD for blog posts with rich form (categories, ratings, cover image preview)
+- Dashboard with stats cards (total, published, drafts) and filterable posts table
+- Edit and delete any post
+- Delete any user's comment (moderation)
+- Create new categories
+- Access via protected routes (adminGuard)
+
+### 🔌 External API Integration
+- **TMDB API** — Trending movies, TV shows, and K-Dramas with poster images and ratings
+- **Jikan API** — Top anime and manga from MyAnimeList with episode counts and scores
+- Dropdown selector to switch between your reviews and external data
+- Auth interceptor intelligently skips JWT for external API calls
 
 ---
 
@@ -133,114 +145,135 @@ This project follows **Onion Architecture** with clear separation of concerns:
 
 ```
 ReviewVault/
-├── ReviewVault.Domain/              ← Core (zero dependencies)
-│   ├── Models/                      Pure business models
-│   ├── Enums/                       Rating enum
-│   └── Interfaces/                  Repository contracts
+├── ReviewVault.Domain/                     ← Core (zero dependencies)
+│   ├── Models/                             Pure C# business models
+│   │   ├── User.cs
+│   │   ├── Post.cs
+│   │   ├── Comment.cs
+│   │   ├── Like.cs
+│   │   └── Bookmark.cs
+│   ├── Enums/                              Rating (1-5)
+│   └── Interfaces/                         Repository contracts
+│       ├── IPostRepository.cs
+│       ├── IUserRepository.cs
+│       ├── ICommentRepository.cs
+│       ├── ILikeRepository.cs
+│       └── IBookmarkRepository.cs
 │
-├── ReviewVault.Application/         ← Business Logic
+├── ReviewVault.Application/                ← Business Logic
 │   ├── DTOs/
-│   │   ├── RequestDTOs/             Incoming data shapes
-│   │   └── ResponseDTOs/            Outgoing data shapes
-│   ├── Interfaces/                  Service contracts + IJwtService
-│   ├── Services/                    Business logic implementation
-│   ├── Mappings/                    AutoMapper profiles
-│   └── Validators/                  FluentValidation rules
+│   │   ├── RequestDTOs/                    CreatePostRequest, LoginRequest, etc.
+│   │   └── ResponseDTOs/                   PostResponse, AuthResponse, LikeInfo, etc.
+│   ├── Interfaces/                         Service contracts
+│   │   ├── IPostService.cs
+│   │   ├── IAuthService.cs
+│   │   ├── ICommentService.cs
+│   │   ├── ILikeService.cs
+│   │   ├── IBookmarkService.cs
+│   │   ├── IUserService.cs
+│   │   └── IJwtService.cs
+│   ├── Services/                           Business logic implementation
+│   ├── Mappings/                           AutoMapper profiles
+│   └── Validators/                         FluentValidation rules
 │
-├── ReviewVault.Infrastructure/      ← Data Access & External Services
-│   ├── Entities/                    EF Core entities
+├── ReviewVault.Infrastructure/             ← Data Access & External Services
+│   ├── Entities/                           EF Core entities with navigation props
 │   ├── Data/
-│   │   ├── AppDbContext.cs
-│   │   └── Configurations/          Fluent API configs per entity
-│   ├── Mappings/                    EntityMapper (Entity ↔ Domain)
-│   ├── Repositories/               Repository implementations
-│   └── ExternalServices/           JwtService implementation
+│   │   ├── AppDbContext.cs                 DbContext with DbSets
+│   │   └── Configurations/                 IEntityTypeConfiguration per entity
+│   ├── Mappings/EntityMapper.cs            Static extension methods (Entity ↔ Domain)
+│   ├── Repositories/                       All repository implementations
+│   └── ExternalServices/JwtService.cs      JWT token generation
 │
-├── ReviewVault.Api/                 ← Entry Point
-│   ├── Controllers/                 API endpoints
-│   ├── Middleware/                  Exception handler, Validation filter
-│   └── Program.cs                   DI wiring, pipeline config
+├── ReviewVault.Api/                        ← Entry Point & DI Root
+│   ├── Controllers/                        7 API controllers
+│   │   ├── AuthController.cs               Register, Login, Refresh, Revoke
+│   │   ├── PostController.cs               CRUD + Search + Filter
+│   │   ├── CategoryController.cs
+│   │   ├── MediaTypeController.cs
+│   │   ├── CommentController.cs
+│   │   ├── LikeController.cs
+│   │   ├── BookmarkController.cs
+│   │   └── UserController.cs               Profile, Change Password
+│   ├── Middleware/
+│   │   ├── GlobalExceptionMiddleware.cs    Catches all exceptions
+│   │   └── ValidationFilter.cs             Auto-validates with FluentValidation
+│   └── Program.cs                          DI wiring, JWT config, CORS, pipeline
 │
-└── ReviewVault.Client/              ← Angular Frontend
+└── ReviewVault.Client/                     ← Angular 20 Frontend
     └── src/app/
         ├── core/
-        │   ├── models/              TypeScript interfaces
-        │   ├── services/            API services + base service
-        │   ├── interceptors/        JWT auto-attach
-        │   └── guards/              Route protection
+        │   ├── models/                     TypeScript interfaces (Post, Auth, Comment, Like, etc.)
+        │   ├── services/
+        │   │   ├── api-base.service.ts     Base HTTP service (DRY pattern)
+        │   │   ├── auth.service.ts         Login, register, token management
+        │   │   ├── post.service.ts         Posts CRUD + search
+        │   │   ├── comment.service.ts      Comments CRUD
+        │   │   ├── like.service.ts         Like toggle
+        │   │   ├── bookmark.service.ts     Bookmark toggle + list
+        │   │   ├── user.service.ts         Profile + password change
+        │   │   ├── tmdb.service.ts         External movie/TV API
+        │   │   ├── jikan.service.ts        External anime/manga API
+        │   │   ├── theme.service.ts        Dark/Light mode
+        │   │   └── toast.service.ts        Custom notification system
+        │   ├── interceptors/
+        │   │   └── auth.interceptor.ts     Auto JWT + skip external APIs
+        │   └── guards/
+        │       └── auth.guard.ts           authGuard + adminGuard
         ├── shared/
-        │   ├── navbar/              Navigation + user menu
+        │   ├── navbar/                     Responsive nav + role-based menu
         │   ├── footer/
-        │   ├── post-card/           Reusable card component
-        │   └── theme-toggle/        Dark/Light switch
+        │   ├── post-card/                  Reusable card with clickable categories
+        │   ├── pagination/                 Reusable numbered pagination
+        │   ├── theme-toggle/               Dark/Light switch
+        │   └── toast/                      Custom Bootstrap toast notifications
         └── pages/
-            ├── home/                Cards grid + hero
-            ├── post-detail/         Full article view
-            ├── category/            Filter by category
-            ├── trending/            Top rated posts
-            ├── login/               Admin login
+            ├── home/                       Hero banner + cards grid + pagination
+            ├── post-detail/                Article + comments + like/bookmark
+            ├── category/                   Filter by category + browse pills
+            ├── trending/                   TMDB + Jikan + your reviews
+            ├── search/                     Full-text search with results grid
+            ├── about/                      Platform info + tech stack
+            ├── login/                      Reactive form with validation
+            ├── register/                   Password strength indicators
+            ├── profile/                    Stats, bookmarks, change password
+            ├── not-found/                  Custom 404 page
             └── admin/
-                ├── dashboard/       Post management
-                ├── create-post/     New post form
-                └── edit-post/       Edit existing post
+                ├── dashboard/              Stats cards + posts table + filters
+                ├── create-post/            Full form with live image preview
+                └── edit-post/              Pre-filled form with category checks
 ```
 
 ---
 
-## 🔐 Authentication Flow
+## 🔐 Authentication & Authorization
 
 ```
-1. Login with email + password
-2. Server validates → returns Access Token (30 min) + Refresh Token (7 days)
-3. Access Token sent with every API request via HTTP Interceptor
-4. Token expires → Interceptor detects 401 → auto-logout
-5. Refresh Token can generate new Access Token without re-login
-6. Refresh Token stored in database → revocable by admin
+REGISTRATION:
+  POST /api/Auth/register        → Creates "User" role (public)
+  POST /api/Auth/register-admin  → Creates "Admin" role (protected, Admin only)
+
+LOGIN FLOW:
+  1. User sends email + password
+  2. Server validates → returns Access Token (30 min) + Refresh Token (7 days)
+  3. Angular stores in localStorage + notifies BehaviorSubject subscribers
+  4. HTTP Interceptor auto-attaches JWT to every API request
+  5. Token expires → Interceptor detects 401 → auto-logout
+  6. App startup → checks token expiry → auto-refreshes if possible
+
+ROLE-BASED ACCESS:
+  ┌────────────┬──────────────────────────────────────────┐
+  │ Role       │ Can Access                               │
+  ├────────────┼──────────────────────────────────────────┤
+  │ Visitor    │ Browse, read, search, view trending      │
+  │ User       │ + Like, bookmark, comment, profile       │
+  │ Admin      │ + Dashboard, CRUD posts, delete comments │
+  └────────────┴──────────────────────────────────────────┘
+
+ANGULAR GUARDS:
+  authGuard   → any logged-in user (profile, like, comment)
+  adminGuard  → Admin only (dashboard, create/edit posts)
 ```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- .NET 8 SDK
-- Node.js 18+
-- Angular CLI (`npm install -g @angular/cli`)
-- SQL Server (LocalDB or Express)
-
-### Backend Setup
-
-```bash
-# Clone the repo
-git clone https://github.com/ammiitt/ReviewVault.git
-cd ReviewVault
-
-# Update connection string in ReviewVault.Api/appsettings.Development.json
-# "Server=YOUR_SERVER;Database=ReviewVaultDb;Trusted_Connection=true;TrustServerCertificate=true;"
-
-# Run migrations
-dotnet ef database update --project ReviewVault.Infrastructure --startup-project ReviewVault.Api
-
-# Run the API
-cd ReviewVault.Api
-dotnet run
-```
-
-API runs at: `https://localhost:7048/swagger`
-
-### Frontend Setup
-
-```bash
-cd ReviewVault.Client
-
-# Install dependencies
-npm install
-
-# Run dev server
-ng serve
-```
-
-App runs at: `http://localhost:4200`
 
 ---
 
@@ -255,36 +288,66 @@ App runs at: `http://localhost:4200`
 │ Email       │  │  │ Slug             │  │  │ Description   │
 │ PasswordHash│  └─→│ AuthorId (FK)    │  │  │ IsActive      │
 │ Role        │     │ MediaTypeId (FK) │←─┘  └───────────────┘
-│ Bio         │     │ Body             │
-└─────────────┘     │ Rating           │     ┌───────────────┐
-                    │ IsPublished      │     │ Categories     │
-┌──────────────┐    │ PublishedAt      │     ├───────────────┤
-│ RefreshTokens│    └────────┬─────────┘     │ Id (PK)       │
-├──────────────┤             │               │ Name          │
-│ Id (PK)      │             │               └───────┬───────┘
-│ Token        │    ┌────────┴─────────┐             │
-│ UserId (FK)  │    │ PostCategories   │             │
-│ ExpiresAt    │    │ (Join Table)     │─────────────┘
-│ RevokedAt    │    │ PostId (FK)      │
-└──────────────┘    │ CategoryId (FK)  │
-                    └──────────────────┘
+│ Bio         │     │ Body, Summary    │
+└──────┬──────┘     │ Rating           │     ┌───────────────┐
+       │            │ IsPublished      │     │ Categories     │
+       │            └───────┬──────────┘     ├───────────────┤
+       │                    │                │ Id (PK)       │
+       │           ┌────────┴─────────┐      │ Name          │
+       │           │ PostCategories   │      └───────┬───────┘
+       │           │ (Join Table)     │──────────────┘
+       │           └──────────────────┘
+       │
+       ├──→ ┌──────────────┐
+       │    │ Comments      │
+       │    ├──────────────┤
+       │    │ UserId (FK)  │──→ Posts.Id
+       │    │ PostId (FK)  │
+       │    │ Body         │
+       │    └──────────────┘
+       │
+       ├──→ ┌──────────────┐
+       │    │ Likes         │
+       │    ├──────────────┤
+       │    │ UserId (FK)  │──→ Posts.Id
+       │    │ PostId (FK)  │
+       │    │ UNIQUE(User+Post) ← one like per user per post
+       │    └──────────────┘
+       │
+       ├──→ ┌──────────────┐
+       │    │ Bookmarks     │
+       │    ├──────────────┤
+       │    │ UserId (FK)  │──→ Posts.Id
+       │    │ PostId (FK)  │
+       │    │ UNIQUE(User+Post)
+       │    └──────────────┘
+       │
+       └──→ ┌──────────────┐
+            │ RefreshTokens │
+            ├──────────────┤
+            │ UserId (FK)  │
+            │ Token         │
+            │ ExpiresAt     │
+            │ RevokedAt     │
+            └──────────────┘
 ```
 
 ---
 
-## 🎯 Design Patterns Used
+## 🎯 Design Patterns
 
-| Pattern | Where |
-|---|---|
-| Onion Architecture | Overall project structure |
-| Repository Pattern | Data access abstraction |
-| Dependency Injection | All layers (constructor injection) |
-| DTO Pattern | Request/Response separation |
-| Mapper Pattern | EntityMapper (manual) + AutoMapper |
-| Strategy Pattern | IJwtService (swappable implementation) |
-| Middleware Pattern | Global exception handler, Validation filter |
-| Base Service Pattern | Angular ApiBaseService for DRY HTTP calls |
-| Observer Pattern | BehaviorSubject for reactive auth/theme state |
+| Pattern | Where | Why |
+|---|---|---|
+| Onion Architecture | Project structure | Dependency flows inward, core has zero dependencies |
+| Repository Pattern | Data access | Abstracts EF Core behind interfaces, swappable |
+| Dependency Injection | All layers | Loose coupling, testable, follows DIP |
+| DTO Pattern | API boundaries | Request/Response separation, never expose entities |
+| Mapper Pattern | Entity↔Domain, Domain↔DTO | Two-stage mapping for clean boundaries |
+| Strategy Pattern | IJwtService | Can swap JWT for any token strategy |
+| Middleware Pattern | Exception handler, Validation | Pipeline processing, cross-cutting concerns |
+| Base Service Pattern | Angular ApiBaseService | DRY HTTP calls, centralized error handling |
+| Observer Pattern | BehaviorSubject | Reactive auth/theme state across components |
+| Toggle Pattern | Likes, Bookmarks | Single endpoint handles create + delete |
 
 ---
 
@@ -293,60 +356,159 @@ App runs at: `http://localhost:4200`
 ### Auth
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| POST | `/api/Auth/register` | Register new user | ❌ |
-| POST | `/api/Auth/login` | Login | ❌ |
-| POST | `/api/Auth/refresh` | Refresh access token | ❌ |
-| POST | `/api/Auth/revoke` | Revoke refresh token | ❌ |
+| POST | `/api/Auth/register` | Register as User | Public |
+| POST | `/api/Auth/register-admin` | Register as Admin | Admin |
+| POST | `/api/Auth/login` | Login → JWT tokens | Public |
+| POST | `/api/Auth/refresh` | Refresh access token | Public |
+| POST | `/api/Auth/revoke` | Revoke refresh token | Public |
 
 ### Posts
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| GET | `/api/Post` | Get all published posts | ❌ |
-| GET | `/api/Post/{slug}` | Get post by slug | ❌ |
-| GET | `/api/Post/id/{id}` | Get post by ID | ❌ |
-| GET | `/api/Post/category/{id}` | Get posts by category | ❌ |
-| POST | `/api/Post` | Create new post | ✅ Admin |
-| PUT | `/api/Post/{id}` | Update post | ✅ Admin |
-| DELETE | `/api/Post/{id}` | Delete post | ✅ Admin |
+| GET | `/api/Post` | All published posts (paginated) | Public |
+| GET | `/api/Post/{slug}` | Post by URL slug | Public |
+| GET | `/api/Post/id/{id}` | Post by ID | Public |
+| GET | `/api/Post/category/{id}` | Posts by category | Public |
+| GET | `/api/Post/search?q=` | Search posts | Public |
+| POST | `/api/Post` | Create post | Admin |
+| PUT | `/api/Post/{id}` | Update post | Admin |
+| DELETE | `/api/Post/{id}` | Delete post | Admin |
 
-### Categories
+### Comments
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| GET | `/api/Category` | Get all categories | ❌ |
-| POST | `/api/Category` | Create category | ✅ Admin |
+| GET | `/api/Comment/post/{postId}` | Comments for a post | Public |
+| GET | `/api/Comment/post/{postId}/count` | Comment count | Public |
+| POST | `/api/Comment` | Create comment | User |
+| DELETE | `/api/Comment/{id}` | Delete comment (own or admin) | User |
 
-### Media Types
+### Likes
 | Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| GET | `/api/MediaType` | Get all media types | ❌ |
-| POST | `/api/MediaType` | Create media type | ✅ Admin |
-| PUT | `/api/MediaType/{id}` | Update media type | ✅ Admin |
-| DELETE | `/api/MediaType/{id}` | Deactivate media type | ✅ Admin |
+| GET | `/api/Like/post/{postId}` | Like count + user status | Public |
+| POST | `/api/Like/toggle/{postId}` | Like/Unlike toggle | User |
+
+### Bookmarks
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/Bookmark` | User's bookmarks | User |
+| GET | `/api/Bookmark/check/{postId}` | Is bookmarked? | User |
+| POST | `/api/Bookmark/toggle/{postId}` | Bookmark/Remove toggle | User |
+
+### User
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/User/profile` | Get profile + stats | User |
+| PUT | `/api/User/profile` | Update username/bio | User |
+| PUT | `/api/User/change-password` | Change password | User |
+
+### Categories & Media Types
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/Category` | All categories | Public |
+| POST | `/api/Category` | Create category | Admin |
+| GET | `/api/MediaType` | All media types | Public |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- .NET 8 SDK
+- Node.js 18+
+- Angular CLI (`npm install -g @angular/cli`)
+- SQL Server (LocalDB or Express)
+
+### Backend Setup
+
+```bash
+git clone https://github.com/ammiitt/ReviewVault.git
+cd ReviewVault
+
+# Update connection string in ReviewVault.Api/appsettings.Development.json
+
+# Run migrations
+dotnet ef database update --project ReviewVault.Infrastructure --startup-project ReviewVault.Api
+
+# Run the API
+cd ReviewVault.Api
+dotnet run
+```
+
+API available at: `https://localhost:7048/swagger`
+
+### Frontend Setup
+
+```bash
+cd ReviewVault.Client
+npm install
+ng serve
+```
+
+App available at: `http://localhost:4200`
+
+### Environment Configuration
+
+```
+Backend:
+  appsettings.json                  → Production (Azure SQL)
+  appsettings.Development.json      → Local (SQL Server Express)
+  Azure Environment Variables       → Jwt__Secret, Jwt__Issuer, Jwt__Audience
+
+Frontend:
+  environments/environment.ts               → Production API URL
+  environments/environment.development.ts   → Local API URL
+  angular.json fileReplacements             → Auto-swaps on ng build
+```
+
+---
+
+## ☁️ Deployment Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    GitHub (Source)                    │
+│              github.com/ammiitt/ReviewVault          │
+└──────────────┬──────────────────────┬────────────────┘
+               │ push to main         │ push to main
+               ▼                      ▼
+┌──────────────────────┐  ┌────────────────────────────┐
+│   Azure App Service  │  │  Azure Static Web Apps     │
+│   (API - .NET 8)     │  │  (Angular - GitHub Actions)│
+│   Free F1 tier       │  │  Free tier + auto SSL      │
+└──────────┬───────────┘  └────────────────────────────┘
+           │
+           ▼
+┌──────────────────────┐
+│   Azure SQL Database │
+│   Basic tier (5 DTU) │
+│   Central India      │
+└──────────────────────┘
+```
 
 ---
 
 ## 🔮 Future Roadmap
 
-- [ ] Search functionality (by title, keyword)
-- [ ] Rich text editor for posts
+- [ ] Rich text editor for posts (Quill/TinyMCE)
 - [ ] Image upload to Azure Blob Storage
-- [ ] User registration (multi-author support)
-- [ ] Comments system
-- [ ] Like / Bookmark posts
 - [ ] Email notifications for subscribers
-- [ ] About page
-- [ ] Custom domain integration
-- [ ] Unit and integration tests
+- [ ] Social login (Google OAuth)
+- [ ] Admin user management panel
+- [ ] Related posts suggestions
+- [ ] RSS feed
+- [ ] PWA support (installable on mobile)
 - [ ] Redis caching for popular posts
+- [ ] Unit and integration tests
 
 ---
 
 ## 👨‍💻 Author
 
-**Amit** — Full-Stack Developer
+**Amit** — Full-Stack .NET & Angular Developer
 
-- 🛠️ Tech: C#, .NET, Angular, TypeScript, SQL Server, Azure
-- 🎬 Interests: Movies, Anime, K-Drama
+- 🛠️ Stack: C#, .NET, Angular, TypeScript, SQL Server, Azure
+- 🎬 Passions: Movies, Anime, K-Drama, Manga
 - 🔗 GitHub: [@ammiitt](https://github.com/ammiitt)
 
 ---
