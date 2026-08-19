@@ -37,6 +37,28 @@ namespace ReviewVault.Api.Controllers
             });
         }
 
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<PostResponseDTO>>> Search(
+            [FromQuery] string q,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
+            {
+                if (string.IsNullOrWhiteSpace(q))
+                    return Ok(new { data = Array.Empty<PostResponseDTO>(), totalCount = 0, page, pageSize, totalPages = 0 });
+
+                var posts = await _postService.SearchAsync(q, page, pageSize);
+                var total = await _postService.SearchCountAsync(q);
+
+            return Ok(new
+            {
+                data = posts,
+                totalCount = total,
+                page,
+                pageSize,
+                totalPages = (int)Math.Ceiling(total / (double)pageSize)
+            });
+        }
+
         [HttpGet("{slug}")]
         public async Task<ActionResult<PostResponseDTO>> GetBySlug(string slug)
         {

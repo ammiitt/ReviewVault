@@ -47,6 +47,16 @@ namespace ReviewVault.Application.Service
             return _mapper.Map<IEnumerable<PostResponseDTO>>(posts);
         }
 
+        public async Task<IEnumerable<PostResponseDTO>> SearchAsync(string q,int page, int pageSize)
+        {
+            var posts = await _postRepo.SearchAsync(q, page, pageSize);
+            return _mapper.Map<IEnumerable<PostResponseDTO>>( posts);
+        }
+
+        public async Task<int> SearchCountAsync(string query)
+        {
+            return await _postRepo.SearchCountAsync(query);
+        }
         public async Task<int> GetTotalCountAsync()
         {
             return await _postRepo.GetTotalCountAsync(true);

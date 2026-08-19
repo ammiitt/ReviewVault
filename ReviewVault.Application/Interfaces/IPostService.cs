@@ -10,6 +10,8 @@ namespace ReviewVault.Application.Interfaces
         Task<PostResponseDTO> GetBySlugAsync(string slug);
         Task<IEnumerable<PostResponseDTO>> GetByCategoryAsync(int categoryId, int page, int pageSize);
         Task<IEnumerable<PostResponseDTO>> GetAllPublishedAsync(int page, int pageSize);
+        Task<IEnumerable<PostResponseDTO>> SearchAsync(string query, int page, int pageSize);
+        Task<int> SearchCountAsync(string query);
         Task<int> GetTotalCountAsync();
         Task<PostResponseDTO> CreateAsync(CreateRequestDTO request, int authorId);
         Task<PostResponseDTO> UpdateAsync(int id, UpdateRequestDTO request);

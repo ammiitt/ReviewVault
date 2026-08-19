@@ -146,5 +146,37 @@ namespace ReviewVault.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<Post>> SearchAsync(string query, int page, int pageSize)
+        {
+            var lowerQuery = query.ToLower();
+
+            var entities = await _context.Posts
+                .Include(p => p.Author)
+                .Include(p => p.MediaType)
+                .Include(p => p.Categories)
+                .Where(p => p.IsPublished &&
+                    (p.Title.ToLower().Contains(lowerQuery) ||
+                     p.Body.ToLower().Contains(lowerQuery) ||
+                     p.Summary!.ToLower().Contains(lowerQuery)))
+                .OrderByDescending(p => p.PublishedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return entities.Select(e => e.ToDomain());
+        }
+
+        public async Task<int> SearchCountAsync(string query)
+        {
+            var lowerQuery = query.ToLower();
+
+            return await _context.Posts
+                .CountAsync(p => p.IsPublished &&
+                    (p.Title.ToLower().Contains(lowerQuery) ||
+                     p.Body.ToLower().Contains(lowerQuery) ||
+                     p.Summary!.ToLower().Contains(lowerQuery)));
+        }
     }
 }
