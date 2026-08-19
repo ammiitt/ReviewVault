@@ -1,0 +1,65 @@
+<div class="text-center mb-4">
+    <h2 class="fw-bold">
+        <i class="bi bi-search me-2"></i>Search
+    </h2>
+</div>
+
+<!-- Search bar -->
+<div class="row justify-content-center mb-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="input-group input-group-lg">
+            <span class="input-group-text">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control"
+                   [(ngModel)]="query"
+                   placeholder="Search movies, anime, series..."
+                   (keyup.enter)="search()">
+            <button class="btn btn-primary" (click)="search()" [disabled]="!query.trim()">
+                Search
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Results info -->
+<div *ngIf="searched" class="text-center mb-3">
+    <span class="text-body-secondary">
+        {{ totalCount }} result{{ totalCount !== 1 ? 's' : '' }} for "{{ searchedQuery }}"
+    </span>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+</div>
+
+<!-- Results grid -->
+<div class="row g-4" *ngIf="!loading && posts.length > 0">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let post of posts">
+        <app-post-card [post]="post"></app-post-card>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="mt-4" *ngIf="totalPages > 1">
+    <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [totalCount]="totalCount"
+        (pageChange)="loadPage($event)">
+    </app-pagination>
+</div>
+
+<!-- No results -->
+<div *ngIf="!loading && searched && posts.length === 0" class="text-center py-5">
+    <i class="bi bi-search display-3 text-body-secondary"></i>
+    <p class="text-body-secondary mt-3">No results found for "{{ searchedQuery }}"</p>
+    <p class="text-body-secondary">Try different keywords</p>
+</div>
+
+<!-- Initial state -->
+<div *ngIf="!searched && !loading" class="text-center py-5">
+    <i class="bi bi-journal-richtext display-3 text-body-secondary"></i>
+    <p class="text-body-secondary mt-3">Search across all reviews</p>
+</div>

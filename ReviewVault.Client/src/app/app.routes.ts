@@ -58,10 +58,24 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/profile')
         .then(m => m.Profile),
     canActivate: [authGuard]
-},
+    },
+    {
+    path: 'search',
+    loadComponent: () => import('./pages/search/search')
+        .then(m => m.Search)
+    },
+    {
+    path: 'about',
+    loadComponent: () => import('./pages/about/about')
+        .then(m => m.About)
+    },
 
     // Wildcard — any unknown URL goes to home
-    { path: '**', redirectTo: '' }
+    {
+    path: '**',
+    loadComponent: () => import('./pages/not-found/not-found')
+        .then(m => m.NotFound)
+    }
 
     
 ];
