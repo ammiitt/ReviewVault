@@ -10,37 +10,37 @@ A production-ready blog platform for movie, anime, and series reviews. Built wit
 ## 📸 Screenshots
 
 ### Home Page (Light Mode)
-![Home Light](docs/screenshots/home-light.png)
+![Home Light](docs/Screenshots/home-light.png)
 
 ### Home Page (Dark Mode)
-![Home Dark](docs/screenshots/home-dark.png)
+![Home Dark](docs/Screenshots/home-dark.png)
 
 ### Post Detail — Comments, Likes & Bookmarks
-![Post Detail](docs/screenshots/post-detail.png)
+![Post Detail](docs/Screenshots/post-detail.png)
 
 ### Trending — TMDB & Jikan Integration
-![Trending](docs/screenshots/trending.png)
+![Trending](docs/Screenshots/trending.png)
 
 ### Search
-![Search](docs/screenshots/search.png)
+![Search](docs/Screenshots/search.png)
 
 ### Admin Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](docs/Screenshots/dashboard.png)
 
 ### Create Post
-![Create Post](docs/screenshots/create-post.png)
+![Create Post](docs/Screenshots/create-post.png)
 
 ### User Profile
-![Profile](docs/screenshots/profile.png)
+![Profile](docs/Screenshots/profile.png)
 
 ### Login
-![Login](docs/screenshots/login.png)
+![Login](docs/Screenshots/login.png)
 
 ### Register — Password Strength Indicators
-![Register](docs/screenshots/register.png)
+![Register](docs/Screenshots/register.png)
 
 ### About
-![About](docs/screenshots/about.png)
+![About](docs/Screenshots/about.png)
 ---
 
 ## 🏗️ Architecture
