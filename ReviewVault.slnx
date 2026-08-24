@@ -3,4 +3,5 @@
   <Project Path="ReviewVault.Application/ReviewVault.Application.csproj" />
   <Project Path="ReviewVault.Domain/ReviewVault.Domain.csproj" />
   <Project Path="ReviewVault.Infrastructure/ReviewVault.Infrastructure.csproj" />
+  <Project Path="ReviewVault.Tests/ReviewVault.Tests.csproj" Id="0ece1a1a-52a8-4491-8377-71d84df3eaec" />
 </Solution>
